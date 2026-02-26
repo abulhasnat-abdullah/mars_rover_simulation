@@ -1,5 +1,4 @@
-# Rover Workspace - ROS2 Jazzy
-
+# Fully Autonomous Rover Simulation
 A comprehensive ROS2 Jazzy workspace for simulating and controlling a 4-wheel differential drive rover with advanced navigation, mapping, and terrain analysis capabilities.
 
 ## Features
