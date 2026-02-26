@@ -1,0 +1,109 @@
+# Global EKF for ENU (East-North-Up) Localization
+# Fuses: Wheel Odometry + IMU + GPS
+# Publishes: map->base_footprint (global position in ENU frame)
+
+ekf_global_filter_node:
+  ros__parameters:
+    frequency: 30.0
+    sensor_timeout: 0.2
+    two_d_mode: true
+    
+    # Frame configuration for ENU
+    map_frame: map              # ENU global frame (origin at GPS datum)
+    odom_frame: odom            # Local odometry frame
+    base_link_frame: base_footprint
+    world_frame: map            # CRITICAL: map is world frame for ENU!
+    
+    publish_tf: true
+    publish_acceleration: false
+    
+    # ============ WHEEL ODOMETRY ============
+    # Use velocities only - position drifts over time
+    odom0: rover_controller/odom
+    odom0_config: [false, false, false,   # x, y, z position
+                   false, false, false,   # roll, pitch, yaw orientation
+                   true,  true,  false,   # x_dot, y_dot, z_dot velocities (USE)
+                   false, false, true,    # roll_dot, pitch_dot, yaw_dot (USE yaw_dot)
+                   false, false, false]   # accelerations
+    odom0_differential: false
+    odom0_relative: false
+    
+    # ============ IMU ============
+    imu0: imu/out   #zed/zed_node/imu/data
+    imu0_config: [false, false, false,   # x, y, z position
+                  false, false, true,    # roll, pitch, yaw (USE yaw)
+                  false, false, false,   # velocities
+                  false, false, true,    # angular velocities (USE yaw_dot)
+                  true,  false, false]   # accelerations (USE x accel)
+    imu0_differential: false
+    imu0_remove_gravitational_acceleration: true
+    
+    # ============ GPS (converted to map frame odometry) ============
+    # This is the key difference - GPS provides absolute position in map frame
+    odom1: odometry/gps
+    odom1_config: [true,  true,  false,   # x, y, z position (USE GPS x,y in ENU)
+                   false, false, false,   # roll, pitch, yaw orientation
+                   false, false, false,   # velocities
+                   false, false, false,   # angular velocities
+                   false, false, false]   # accelerations
+    odom1_differential: false
+    odom1_relative: false  # GPS is absolute in map frame
+    odom1_queue_size: 10
+    
+    # Process noise - tuned for GPS fusion
+    process_noise_covariance: [0.05, 0.0,  0.0,  0.0,  0.0,  0.0,  0.0,    0.0,    0.0,  0.0,  0.0,  0.0,  0.0,  0.0,  0.0,
+                               0.0,  0.05, 0.0,  0.0,  0.0,  0.0,  0.0,    0.0,    0.0,  0.0,  0.0,  0.0,  0.0,  0.0,  0.0,
+                               0.0,  0.0,  0.06, 0.0,  0.0,  0.0,  0.0,    0.0,    0.0,  0.0,  0.0,  0.0,  0.0,  0.0,  0.0,
+                               0.0,  0.0,  0.0,  0.03, 0.0,  0.0,  0.0,    0.0,    0.0,  0.0,  0.0,  0.0,  0.0,  0.0,  0.0,
+                               0.0,  0.0,  0.0,  0.0,  0.03, 0.0,  0.0,    0.0,    0.0,  0.0,  0.0,  0.0,  0.0,  0.0,  0.0,
+                               0.0,  0.0,  0.0,  0.0,  0.0,  0.06, 0.0,    0.0,    0.0,  0.0,  0.0,  0.0,  0.0,  0.0,  0.0,
+                               0.0,  0.0,  0.0,  0.0,  0.0,  0.0,  0.025,  0.0,    0.0,  0.0,  0.0,  0.0,  0.0,  0.0,  0.0,
+                               0.0,  0.0,  0.0,  0.0,  0.0,  0.0,  0.0,    0.025,  0.0,  0.0,  0.0,  0.0,  0.0,  0.0,  0.0,
+                               0.0,  0.0,  0.0,  0.0,  0.0,  0.0,  0.0,    0.0,    0.04, 0.0,  0.0,  0.0,  0.0,  0.0,  0.0,
+                               0.0,  0.0,  0.0,  0.0,  0.0,  0.0,  0.0,    0.0,    0.0,  0.01, 0.0,  0.0,  0.0,  0.0,  0.0,
+                               0.0,  0.0,  0.0,  0.0,  0.0,  0.0,  0.0,    0.0,    0.0,  0.0,  0.01, 0.0,  0.0,  0.0,  0.0,
+                               0.0,  0.0,  0.0,  0.0,  0.0,  0.0,  0.0,    0.0,    0.0,  0.0,  0.0,  0.02, 0.0,  0.0,  0.0,
+                               0.0,  0.0,  0.0,  0.0,  0.0,  0.0,  0.0,    0.0,    0.0,  0.0,  0.0,  0.0,  0.01, 0.0,  0.0,
+                               0.0,  0.0,  0.0,  0.0,  0.0,  0.0,  0.0,    0.0,    0.0,  0.0,  0.0,  0.0,  0.0,  0.01, 0.0,
+                               0.0,  0.0,  0.0,  0.0,  0.0,  0.0,  0.0,    0.0,    0.0,  0.0,  0.0,  0.0,  0.0,  0.0,  0.015]
+    
+    # Initial covariance - moderate uncertainty in starting position
+    initial_estimate_covariance: [1.0,  0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0,
+                                  0.0,  1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0,
+                                  0.0,  0.0, 1e-9, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0,
+                                  0.0,  0.0, 0.0, 1e-9, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0,
+                                  0.0,  0.0, 0.0, 0.0, 1e-9, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0,
+                                  0.0,  0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0,
+                                  0.0,  0.0, 0.0, 0.0, 0.0, 0.0, 1e-9, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0,
+                                  0.0,  0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1e-9, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0,
+                                  0.0,  0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1e-9, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0,
+                                  0.0,  0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1e-9, 0.0, 0.0, 0.0, 0.0, 0.0,
+                                  0.0,  0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1e-9, 0.0, 0.0, 0.0, 0.0,
+                                  0.0,  0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1e-9, 0.0, 0.0, 0.0,
+                                  0.0,  0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1e-9, 0.0, 0.0,
+                                  0.0,  0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1e-9, 0.0,
+                                  0.0,  0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1e-9]
+
+# ============ NAVSAT TRANSFORM NODE ============
+# Converts GPS (lat/lon) to ENU Cartesian coordinates
+navsat_transform_node:
+  ros__parameters:
+    frequency: 10.0
+    delay: 3.0  # Wait for IMU/odom to stabilize
+    
+    # Magnetic declination for Dhaka, Bangladesh
+    magnetic_declination_radians: -0.0087
+    
+    yaw_offset: 0.0
+    zero_altitude: true  # 2D mode - ignore altitude
+    broadcast_cartesian_transform: false  # EKF handles the transform
+    publish_filtered_gps: true
+    use_odometry_yaw: true  # Use odometry yaw instead of magnetometer
+    wait_for_datum: true  # Wait for first GPS fix to set datum
+    
+    # OPTION 1: Auto-datum (first GPS fix becomes origin)
+    # Leave datum commented out - first GPS fix will be (0,0)
+    
+    # OPTION 2: Fixed datum (uncomment and set your coordinates)
+    # This makes your map frame consistent across sessions
+    # datum: [23.873873873873872, 90.40154988735662, 0.0]  # [lat, lon, alt]

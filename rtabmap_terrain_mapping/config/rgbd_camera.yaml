@@ -1,0 +1,30 @@
+# ZED Camera configuration - Point Cloud Only
+# Topics aligned with zed_wrapper in your workspace
+
+rgbd_camera:
+  ros__parameters:
+    use_sim_time: true
+    
+    # ZED RGB-D topics
+    rgb_topic: /zed/zed_node/rgb/image_rect_color
+    depth_topic: /zed/zed_node/depth/depth_registered
+    camera_info_topic: /zed/zed_node/rgb/camera_info
+    depth_camera_info_topic: /zed/zed_node/depth/camera_info
+    
+    # Point cloud topic (main input for 3D mapping)
+    cloud_topic: /zed/zed_node/depth/depth_registered/points
+    
+    # TF frames
+    camera_frame: zed_camera_center
+    base_frame: base_footprint
+    odom_frame: odom
+    map_frame: map
+    
+    # Depth processing
+    depth_scale: 1.0
+    min_depth: 0.3
+    max_depth: 20.0
+    
+    # Point cloud processing
+    voxel_size: 0.05
+    decimation: 4

@@ -1,0 +1,16 @@
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+
+# IDE
+.vscode/
+.idea/
+
+# ROS2 build artifacts (if any end up here)
+*.db
+*.db-journal
+
+# OS
+.DS_Store
+Thumbs.db

@@ -1,0 +1,195 @@
+<?xml version="1.0"?>
+<robot xmlns:xacro="http://www.ros.org/wiki/xacro" name="rover">
+
+    <xacro:arg name="use_sim_time" default="true" />
+    <xacro:arg name="is_sim" default="true" />
+    <xacro:arg name="is_ignition" default="false" />
+    
+    <!-- 1. Automatically detect the ROS distribution from the environment -->
+    <xacro:property name="ros_distro" value="$(env ROS_DISTRO)" />
+
+    <!-- 2. Logic: If distro is 'humble', set is_ignition to true. 
+     For 'jazzy' (or others like 'rolling'), it will be false. -->
+    <xacro:property name="is_ignition" value="${ros_distro == 'humble'}" />
+    
+
+    <!-- ros2_control Gazebo -->
+    <xacro:if value="$(arg is_sim)">
+        <ros2_control name="RoverSystem" type="system">
+            <!-- ROS 2 Humble -->
+            <xacro:if value="$(arg is_ignition)">
+                <hardware>
+                    <plugin>ign_ros2_control/IgnitionSystem</plugin>
+                </hardware>
+            </xacro:if>
+
+            <!-- ROS 2 Iron or above -->
+            <xacro:unless value="$(arg is_ignition)">
+                <hardware>
+                    <plugin>gz_ros2_control/GazeboSimSystem</plugin>
+                </hardware>
+            </xacro:unless>
+
+            <!-- ros2_control Common Interfaces for 4-wheel rover -->
+            <!-- Back Right Wheel -->
+            <joint name="joint_BR">
+                <command_interface name="velocity">
+                    <param name="min">-10</param>
+                    <param name="max">10</param>
+                </command_interface>
+                <state_interface name="position" />
+                <state_interface name="velocity" />
+            </joint>
+
+            <!-- Back Left Wheel -->
+            <joint name="joint_BL">
+                <command_interface name="velocity">
+                    <param name="min">-10</param>
+                    <param name="max">10</param>
+                </command_interface>
+                <state_interface name="position" />
+                <state_interface name="velocity" />
+            </joint>
+
+            <!-- Front Right Wheel -->
+            <joint name="joint_FR">
+                <command_interface name="velocity">
+                    <param name="min">-10</param>
+                    <param name="max">10</param>
+                </command_interface>
+                <state_interface name="position" />
+                <state_interface name="velocity" />
+            </joint>
+
+            <!-- Front Left Wheel -->
+            <joint name="joint_FL">
+                <command_interface name="velocity">
+                    <param name="min">-10</param>
+                    <param name="max">10</param>
+                </command_interface>
+                <state_interface name="position" />
+                <state_interface name="velocity" />
+            </joint>
+        </ros2_control>
+    </xacro:if>
+
+    <!-- ros2_control Real Robot
+    <xacro:unless value="$(arg is_sim)"> -->
+        <!-- ==================== ODRIVE 1: FRONT WHEELS ==================== -->
+        <!-- <ros2_control name="odrive_front" type="system">
+            <hardware>
+                <plugin>odrive_hardware_interface/ODriveHardwareInterface</plugin>
+            </hardware> -->
+
+            <!-- Sensor for ODrive 1 -->
+            <!-- <sensor name="odrv_front_sensor">
+                <param name="serial_number">YOUR_FRONT_ODRIVE_SERIAL</param>
+            </sensor> -->
+
+            <!-- FRONT LEFT WHEEL (Axis 0) -->
+            <!-- <joint name="joint_FL">
+                <command_interface name="velocity">
+                    <param name="min">-100</param>
+                    <param name="max">100</param>
+                </command_interface>
+                
+                <state_interface name="position"/>
+                <state_interface name="velocity"/>
+                <state_interface name="effort"/>
+                <state_interface name="axis_error"/>
+                <state_interface name="motor_error"/>
+                <state_interface name="encoder_error"/>
+                <state_interface name="controller_error"/>
+                <state_interface name="fet_temperature"/>
+                <state_interface name="motor_temperature"/>
+                
+                <param name="serial_number">YOUR_FRONT_ODRIVE_SERIAL</param>
+                <param name="axis">0</param>
+                <param name="enable_watchdog">1</param>
+                <param name="watchdog_timeout">0.5</param>
+            </joint> -->
+
+            <!-- FRONT RIGHT WHEEL (Axis 1) -->
+            <!-- <joint name="joint_FR">
+                <command_interface name="velocity">
+                    <param name="min">-100</param>
+                    <param name="max">100</param>
+                </command_interface>
+                
+                <state_interface name="position"/>
+                <state_interface name="velocity"/>
+                <state_interface name="effort"/>
+                <state_interface name="axis_error"/>
+                <state_interface name="motor_error"/>
+                <state_interface name="encoder_error"/>
+                <state_interface name="controller_error"/>
+                <state_interface name="fet_temperature"/>
+                <state_interface name="motor_temperature"/>
+                
+                <param name="serial_number">YOUR_FRONT_ODRIVE_SERIAL</param>
+                <param name="axis">1</param>
+                <param name="enable_watchdog">1</param>
+                <param name="watchdog_timeout">0.5</param>
+            </joint>
+        </ros2_control> -->
+
+        <!-- ==================== ODRIVE 2: REAR WHEELS ==================== -->
+        <!-- <ros2_control name="odrive_rear" type="system">
+            <hardware>
+                <plugin>odrive_hardware_interface/ODriveHardwareInterface</plugin>
+            </hardware> -->
+
+            <!-- Sensor for ODrive 2 -->
+            <!-- <sensor name="odrv_rear_sensor">
+                <param name="serial_number">YOUR_REAR_ODRIVE_SERIAL</param>
+            </sensor> -->
+
+            <!-- BACK LEFT WHEEL (Axis 0) -->
+            <!-- <joint name="joint_BL">
+                <command_interface name="velocity">
+                    <param name="min">-100</param>
+                    <param name="max">100</param>
+                </command_interface>
+                
+                <state_interface name="position"/>
+                <state_interface name="velocity"/>
+                <state_interface name="effort"/>
+                <state_interface name="axis_error"/>
+                <state_interface name="motor_error"/>
+                <state_interface name="encoder_error"/>
+                <state_interface name="controller_error"/>
+                <state_interface name="fet_temperature"/>
+                <state_interface name="motor_temperature"/>
+                
+                <param name="serial_number">YOUR_REAR_ODRIVE_SERIAL</param>
+                <param name="axis">0</param>
+                <param name="enable_watchdog">1</param>
+                <param name="watchdog_timeout">0.5</param>
+            </joint> -->
+
+            <!-- BACK RIGHT WHEEL (Axis 1) -->
+            <!-- <joint name="joint_BR">
+                <command_interface name="velocity">
+                    <param name="min">-100</param>
+                    <param name="max">100</param>
+                </command_interface>
+                
+                <state_interface name="position"/>
+                <state_interface name="velocity"/>
+                <state_interface name="effort"/>
+                <state_interface name="axis_error"/>
+                <state_interface name="motor_error"/>
+                <state_interface name="encoder_error"/>
+                <state_interface name="controller_error"/>
+                <state_interface name="fet_temperature"/>
+                <state_interface name="motor_temperature"/>
+                
+                <param name="serial_number">YOUR_REAR_ODRIVE_SERIAL</param>
+                <param name="axis">1</param>
+                <param name="enable_watchdog">1</param>
+                <param name="watchdog_timeout">0.5</param>
+            </joint>
+        </ros2_control>
+    </xacro:unless> -->
+
+</robot>

@@ -1,0 +1,84 @@
+controller_manager:
+  ros__parameters:
+    update_rate: 100  # Hz
+    use_sim_time: true
+    # Controller list
+    rover_controller:
+      type: diff_drive_controller/DiffDriveController
+      
+    joint_state_broadcaster:
+      type: joint_state_broadcaster/JointStateBroadcaster    #to know the current state of the wheels
+
+    # simple_velocity_controller:
+    #   type: velocity_controllers/JointGroupVelocityController  #amar banano only for learning purpose
+
+
+
+
+# Differential Drive Controller Configuration
+rover_controller:
+  ros__parameters:
+    type: diff_drive_controller/DiffDriveController
+
+    # Wheel configuration - based on URDF
+    left_wheel_names: ['joint_FL', 'joint_BL']   # Front-Left, Back-Left
+    right_wheel_names: ['joint_FR', 'joint_BR']  # Front-Right, Back-Right
+    wheel_separation: 0.77      # Updated from URDF analysis (77cm)
+    wheel_radius: 0.135        # Updated from URDF analysis (13.5cm)
+
+    # Multipliers for calibration
+    wheel_separation_multiplier: 1.0
+    left_wheel_radius_multiplier: 1.0
+    right_wheel_radius_multiplier: 1.0
+    
+    # Publishing configuration
+    publish_rate: 50.0
+    # use_stamped_vel: true
+    
+    # Frame configuration
+    base_frame_id: base_footprint 
+    odom_frame_id: odom
+    
+    # TF and publishing options
+    enable_odom_tf: false                      # Let EKF handle the TF
+    publish_limited_velocity: true
+    publish_wheel_data: true
+    
+    # Command timeout
+    cmd_vel_timeout: 0.25
+    
+    # Covariance matrices (updated for larger rover)
+    pose_covariance_diagonal: [0.001, 0.001, 1.0e-3, 1.0e-3, 1.0e-3, 0.01]
+    twist_covariance_diagonal: [0.001, 0.001, 1.0e-3, 1.0e-3, 1.0e-3, 0.01]
+    
+    # Velocity and acceleration limits (adjusted for larger rover)
+    linear:
+      x:
+        has_velocity_limits: true
+        max_velocity: 1.0        # Increased for larger rover
+        min_velocity: -1.0
+        has_acceleration_limits: true
+        max_acceleration: 1.0    # Increased for larger rover
+        min_acceleration: -1.0
+        has_jerk_limits: false
+        max_jerk: 5.0
+        
+    angular:
+      z:
+        has_velocity_limits: true
+        max_velocity: 2.0        # Reduced for stability (larger wheelbase)
+        min_velocity: -2.0
+        has_acceleration_limits: true
+        max_acceleration: 2.0    # Reduced for stability
+        min_acceleration: -2.0
+        has_jerk_limits: false
+        max_jerk: 2.5
+
+    
+# simple_velocity_controller:
+#   ros__parameters:
+#     joints:
+#       - joint_BL
+#       - joint_BR
+#       - joint_FL
+#       - joint_FR

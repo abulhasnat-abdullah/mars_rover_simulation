@@ -1,0 +1,72 @@
+<?xml version="1.0"?>
+<sdf version="1.6">
+  <model name="mars_yard">
+    <static>true</static>
+    <link name="link">
+
+      <pose>0 0 0 0 0 0</pose>
+      <visual name="visual">
+        <geometry>
+          <mesh>
+            <uri>model://mars_yard/meshes/model.obj</uri>
+            <scale>1.0 1.0 1.0</scale>
+          </mesh>
+        </geometry>
+      </visual>
+
+      <collision name="collision">
+        <pose>0 0 0 0 0 0</pose>
+        <geometry>
+          <mesh>
+            <uri>model://mars_yard/meshes/model.obj</uri>
+            <scale>1.0 1.0 1.0</scale>
+          </mesh>
+        </geometry>
+
+        <!-- Surface properties remain the same, applied to the mesh collision -->
+        <surface>
+          <friction>
+            <torsional>
+              <coefficient>1.0</coefficient>
+              <patch_radius>0.05</patch_radius>
+              <surface_radius>0.001</surface_radius>
+              <use_patch_radius>true</use_patch_radius>
+              <ode><slip>0</slip></ode>
+            </torsional>
+            <ode>
+              <mu>1.0</mu>
+              <mu2>1.0</mu2>
+              <fdir1>0 0 0</fdir1>
+              <slip1>0.0</slip1>
+              <slip2>0.0</slip2>
+            </ode>
+          </friction>
+          <contact>
+            <ode>
+              <soft_cfm>0</soft_cfm>
+              <soft_erp>0.2</soft_erp>
+              <kp>1e8</kp>
+              <kd>1</kd>
+              <max_vel>0.01</max_vel>
+              <min_depth>0.001</min_depth>
+            </ode>
+             <bullet>
+                <split_impulse>true</split_impulse>
+                <split_impulse_penetration_threshold>-0.01</split_impulse_penetration_threshold>
+                <soft_cfm>0</soft_cfm>
+                <soft_erp>0.2</soft_erp>
+                <kp>1e8</kp>
+                <kd>1</kd>
+            </bullet>
+          </contact>
+          <bounce>
+            <restitution_coefficient>0</restitution_coefficient>
+            <threshold>0</threshold>
+          </bounce>
+        </surface>
+      </collision>
+
+
+    </link>
+  </model>
+</sdf>

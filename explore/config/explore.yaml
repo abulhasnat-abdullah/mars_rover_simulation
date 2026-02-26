@@ -1,0 +1,39 @@
+explore_node:
+  ros__parameters:
+    # Basic configuration
+    robot_base_frame: base_footprint
+    costmap_topic: /global_costmap/costmap
+    costmap_updates_topic: /global_costmap/costmap_updates
+    visualize: true
+    use_sim_time: true
+    
+    # Exploration frequency
+    planner_frequency: 0.066667 # Plan every 15 seconds
+
+    # Timeout settings - MORE LENIENT
+    progress_timeout: 600.0  # Wait 10 minutes before giving up on a frontier
+
+    # Frontier detection - MORE AGGRESSIVE
+    potential_scale: 5.0
+    orientation_scale: 0.5   # Don't consider robot orientation
+    gain_scale: 1.0      # Prefer information gain
+
+    
+    # Transform tolerance
+    transform_tolerance: 1.0
+    
+    # DON'T return to start when done
+    return_to_init: false
+    
+    # Explore clear space too
+    explore_clear_space: false
+    
+    # Search bounds (adjust based on your world)
+    min_x: -50.0
+    max_x: 50.0
+    min_y: -50.0
+    max_y: 50.0
+    
+    # Blacklist parameters - DISABLE BLACKLISTING
+    min_frontier_size: 0.5  # Minimum size of a frontier to consider
+    min_distance_to_frontier: 0.6  # Minimum distance to consider frontier valid

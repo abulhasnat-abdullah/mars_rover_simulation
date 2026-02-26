@@ -1,0 +1,90 @@
+slam_toolbox:
+  ros__parameters:
+
+    # ========== SOLVER CONFIGURATION ==========
+    # Backend optimization engine settings
+    solver_plugin: solver_plugins::CeresSolver  # Google Ceres optimization library
+    ceres_linear_solver: SPARSE_NORMAL_CHOLESKY  # Efficient sparse matrix solver
+    ceres_preconditioner: SCHUR_JACOBI  # Speeds up convergence
+    ceres_trust_strategy: LEVENBERG_MARQUARDT  # Optimization algorithm
+    ceres_dogleg_type: TRADITIONAL_DOGLEG  # Step calculation method
+    ceres_loss_function: None  # No robust loss function (trust all measurements)
+
+    # ========== FRAME CONFIGURATION ==========
+    # TF frame names for localization
+    odom_frame: odom  # Odometry frame (from EKF)
+    map_frame: map  # Global map frame (SLAM output)
+    base_frame: base_footprint  # Robot base frame
+    scan_topic: /scan  # LiDAR scan topic input
+
+    # ========== SLAM MODE ==========
+    use_map_saver: true  # Enable saving maps to disk
+    slam_mode: true  # Online mapping mode (false = localization only)
+
+    # ========== STATUS AND DEBUGGING ==========
+    publish_status: true  # Publish SLAM status messages
+    status_topic: /slam_status  # Status topic name
+    debug_logging: true  # Enable verbose logging
+    visualize_trajectory: true  # Show robot path in RViz
+
+    # ========== TIMING PARAMETERS ==========
+    throttle_scans: 2  # Process every 2nd scan (reduces CPU load)
+    transform_publish_period: 0.1  # Publish map→odom TF at 10Hz
+    map_update_interval: 2.0  # Update map every 2 seconds
+    transform_timeout: 0.5  # Max wait time for TF lookups
+    tf_buffer_duration: 30.0  # Keep 30s of TF history
+    minimum_time_interval: 0.5  # Min time between processed scans
+
+    # ========== MAP PARAMETERS ==========
+    resolution: 0.05  # Map cell size: 5cm per pixel
+    max_laser_range: 80.0  # Ignore laser readings beyond 80m
+
+    # ========== MOVEMENT THRESHOLDS ==========
+    # Only process scans if robot moved enough (saves CPU)
+    minimum_travel_distance: 0.3  # Min movement: 30cm
+    minimum_travel_heading: 0.3  # Min rotation: ~17 degrees
+
+    # ========== MEMORY CONFIGURATION ==========
+    stack_size_to_use: 40000000  # Stack memory: 40MB
+    enable_interactive_mode: true  # Allow manual loop closures in RViz
+
+    # ========== SCAN MATCHING ==========
+    # Align scans to build consistent map
+    use_scan_matching: true  # Enable scan-to-map matching
+    use_scan_barycenter: true  # Use center of scan for matching
+    scan_buffer_size: 10  # Keep last 10 scans in memory
+    scan_buffer_maximum_scan_distance: 10.0  # Max distance between buffered scans
+    link_match_minimum_response_fine: 0.1  # Quality threshold for scan links
+    link_scan_maximum_distance: 1.5  # Max distance to link scans
+
+    # ========== LOOP CLOSURE ==========
+    # Detect when robot revisits previous locations
+    do_loop_closing: true  # Enable loop closure detection
+    loop_search_maximum_distance: 5.0  # Search radius for loops: 5m
+    loop_match_minimum_response_fine: 0.3  # Quality threshold for loop matches
+    loop_match_minimum_chain_size: 10  # Min scans to form a loop
+    loop_match_maximum_variance_coarse: 3.0  # Max uncertainty in coarse matching
+    loop_match_minimum_response_coarse: 0.35  # Quality threshold for coarse loop detection
+
+    # ========== SCAN CORRELATION PARAMETERS ==========
+    # Fine-tune scan alignment search space
+    correlation_search_space_dimension: 0.5  # Search ±0.5m for scan alignment
+    correlation_search_space_resolution: 0.01  # Search step size: 1cm
+    correlation_search_space_smear_deviation: 0.1  # Smoothing factor
+
+    # ========== LOOP CLOSURE CORRELATION ==========
+    # Larger search space for detecting loops
+    loop_search_space_dimension: 8.0  # Search ±8m for loop closure
+    loop_search_space_resolution: 0.05  # Search step size: 5cm
+    loop_search_space_smear_deviation: 0.03  # Smoothing factor
+
+    # ========== SCAN MATCHER TUNING ==========
+    # Penalties and constraints for scan alignment
+    distance_variance_penalty: 0.5  # Penalize translation uncertainty
+    angle_variance_penalty: 1.0  # Penalize rotation uncertainty (higher = stricter)
+    fine_search_angle_offset: 0.00349  # Fine angle search: ±0.2 degrees
+    coarse_search_angle_offset: 0.349  # Coarse angle search: ±20 degrees
+    coarse_angle_resolution: 0.0349  # Coarse search step: 2 degrees
+    minimum_angle_penalty: 0.9  # Min penalty for angle mismatch
+    minimum_distance_penalty: 0.5  # Min penalty for distance mismatch
+    use_response_expansion: true  # Expand search if no good match found

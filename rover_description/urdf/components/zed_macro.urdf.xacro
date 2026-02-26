@@ -1,0 +1,88 @@
+<?xml version="1.0"?>
+<!--
+  Depth camera macro for simulation (standalone, no zed_wrapper dependency)
+  This provides the same frame structure as a ZED camera for compatibility.
+-->
+
+<robot xmlns:xacro="http://wiki.ros.org/xacro">
+  <xacro:property name="M_PI" value="3.1415926535897931" />
+
+  <!-- Material definitions -->
+  <material name="depth_camera_mat">
+    <color rgba="0.25 0.25 0.25 1.0"/>
+  </material>
+
+  <!--
+    Depth Camera Macro
+    Parameters:
+      - name: the camera's name (e.g., "zed")
+      - baseline: distance between stereo cameras (default 0.12m for ZED2i-like)
+      - height: camera height (default 0.03m)
+  -->
+  <xacro:macro name="depth_camera" params="name=zed baseline=0.12 height=0.03">
+    
+    <!-- Camera mounting point (the threaded screw hole in the bottom) -->
+    <link name="${name}_camera_link" />
+    
+    <!-- Camera Center -->
+    <link name="${name}_camera_center">
+      <visual>
+        <origin xyz="0 0 0" rpy="0 0 0"/>
+        <geometry>
+          <box size="0.03 ${baseline + 0.03} ${height}"/>
+        </geometry>
+        <material name="depth_camera_mat" />
+      </visual>
+      <collision>
+        <origin xyz="0 0 0" rpy="0 0 0"/>
+        <geometry>
+          <box size="0.03 ${baseline + 0.03} ${height}"/>
+        </geometry>
+      </collision>
+      <inertial>
+        <mass value="0.135"/>
+        <origin xyz="0 0 0" rpy="0 0 0"/>
+        <inertia ixx="1e-4" ixy="0" ixz="0" iyy="1e-4" iyz="0" izz="1e-4"/>
+      </inertial>
+    </link>
+    
+    <joint name="${name}_camera_center_joint" type="fixed">
+      <parent link="${name}_camera_link"/>
+      <child link="${name}_camera_center"/>
+      <origin xyz="0 0 ${height/2}" rpy="0 0 0" />
+    </joint>
+
+    <!-- Left Camera Frame -->
+    <link name="${name}_left_camera_frame" />
+    <joint name="${name}_left_camera_joint" type="fixed">
+      <parent link="${name}_camera_center"/>
+      <child link="${name}_left_camera_frame"/>
+      <origin xyz="0 ${baseline/2} 0" rpy="0 0 0" />
+    </joint>
+
+    <!-- Left Camera Optical Frame (Z forward, X right, Y down) -->
+    <link name="${name}_left_camera_frame_optical"/>
+    <joint name="${name}_left_camera_optical_joint" type="fixed">
+      <origin xyz="0 0 0" rpy="-${M_PI/2} 0.0 -${M_PI/2}"/>
+      <parent link="${name}_left_camera_frame"/>
+      <child link="${name}_left_camera_frame_optical"/>
+    </joint>
+
+    <!-- Right Camera Frame -->
+    <link name="${name}_right_camera_frame" />
+    <joint name="${name}_right_camera_joint" type="fixed">
+      <parent link="${name}_camera_center"/>
+      <child link="${name}_right_camera_frame"/>
+      <origin xyz="0 -${baseline/2} 0" rpy="0 0 0" />
+    </joint>
+
+    <!-- Right Camera Optical Frame (Z forward, X right, Y down) -->
+    <link name="${name}_right_camera_frame_optical"/>
+    <joint name="${name}_right_camera_optical_joint" type="fixed">
+      <origin xyz="0 0 0" rpy="-${M_PI/2} 0.0 -${M_PI/2}"/>
+      <parent link="${name}_right_camera_frame"/>
+      <child link="${name}_right_camera_frame_optical"/>
+    </joint>
+
+  </xacro:macro>
+</robot>

@@ -1,0 +1,22 @@
+twist_mux:
+  ros__parameters:
+    use_stamped: true
+    publish_twist_marker: false  # ADD THIS LINE to disable twist_marker
+    locks:
+      safety_stop:
+        topic: safety_stop
+        timeout: 0.0
+        priority: 255
+    topics:
+      joystick:
+        topic: joy_vel
+        timeout: 0.5
+        priority: 99
+      keyboard: 
+        topic: key_vel
+        timeout: 0.5
+        priority: 90
+      navigation: 
+        topic: cmd_vel
+        timeout: 0.5
+        priority: 80

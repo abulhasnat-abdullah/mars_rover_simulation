@@ -1,0 +1,213 @@
+<?xml version="1.0"?>
+<robot xmlns:xacro="http://ros.org/wiki/xacro">
+
+  <!-- Base Link - Using PBR Material -->
+  <gazebo reference="base_link">
+    <material>
+      <ambient>0.5 0.5 0.5 1</ambient>
+      <diffuse>0.7 0.7 0.7 1</diffuse>
+      <specular>0.1 0.1 0.1 1</specular>
+    </material>
+  </gazebo>
+
+  <!-- Wheels Friction & Physics - Using PBR Material -->
+  <xacro:macro name="wheel_gazebo" params="reference">
+    <gazebo reference="${reference}">
+      <mu1>1000000.0</mu1>
+      <mu2>1000000.0</mu2>
+      <kp>1000000000000.0</kp>
+      <kd>10.0</kd>
+      <minDepth>0.001</minDepth>
+      <maxVel>0.1</maxVel>
+      <fdir1>1 0 0</fdir1>
+      <material>
+        <ambient>0.0 0.0 0.0 1</ambient>
+        <diffuse>0.1 0.1 0.1 1</diffuse>
+        <specular>0.05 0.05 0.05 1</specular>
+      </material>
+    </gazebo>
+  </xacro:macro>
+
+  <xacro:wheel_gazebo reference="link_BR"/>
+  <xacro:wheel_gazebo reference="link_BL"/>
+  <xacro:wheel_gazebo reference="link_FR"/>
+  <xacro:wheel_gazebo reference="link_FL"/>
+  
+  <!-- IMU Sensor-->
+  <gazebo reference="imu_link">
+    <sensor name="imu" type="imu">
+        <always_on>true</always_on>
+        <update_rate>100</update_rate>
+        <gz_frame_id>imu_link</gz_frame_id>
+        <ignition_frame_id>imu_link</ignition_frame_id>
+        <topic>imu</topic>
+        <imu>
+          <angular_velocity>
+            <x>
+              <noise type="gaussian">
+                <mean>0.0</mean>
+                <stddev>2e-4</stddev>
+              </noise>
+            </x>
+            <y>
+              <noise type="gaussian">
+                <mean>0.0</mean>
+                <stddev>2e-4</stddev>
+              </noise>
+            </y>
+            <z>
+              <noise type="gaussian">
+                <mean>0.0</mean>
+                <stddev>2e-4</stddev>
+              </noise>
+            </z>
+          </angular_velocity>
+          <linear_acceleration>
+            <x>
+              <noise type="gaussian">
+                <mean>0.0</mean>
+                <stddev>1.7e-2</stddev>
+              </noise>
+            </x>
+            <y>
+              <noise type="gaussian">
+                <mean>0.0</mean>
+                <stddev>1.7e-2</stddev>
+              </noise>
+            </y>
+            <z>
+              <noise type="gaussian">
+                <mean>0.0</mean>
+                <stddev>1.7e-2</stddev>
+              </noise>
+            </z>
+          </linear_acceleration>
+        </imu>
+    </sensor>
+  </gazebo>
+
+  <!-- 2D Laser Sensor -->
+  <gazebo reference="laser_link">
+    <sensor name="lidar" type="gpu_lidar">
+      <always_on>true</always_on>
+      <visualize>true</visualize>
+      <topic>scan</topic>
+      <update_rate>5</update_rate>
+      <gz_frame_id>laser_link</gz_frame_id>
+      <ignition_frame_id>laser_link</ignition_frame_id>
+      <lidar>
+        <scan>
+          <horizontal>
+            <samples>360</samples>
+            <resolution>1.00000</resolution>
+            <min_angle>0.000000</min_angle>
+            <max_angle>6.280000</max_angle>
+          </horizontal>
+        </scan>
+        <range>
+          <min>0.120000</min>
+          <max>12.0</max>
+          <resolution>0.02</resolution>
+        </range>
+        <noise>
+          <type>gaussian</type>
+          <mean>0.0</mean>
+          <stddev>0.01</stddev>
+        </noise>
+      </lidar>
+    </sensor>
+  </gazebo>
+
+  <!-- ========================================= -->
+  <!-- ZED CAMERA SENSORS FOR GAZEBO SIMULATION -->
+  <!-- ========================================= -->
+  
+  <!-- RGB Camera Sensor -->
+ <gazebo reference="zed_camera_center">
+    <sensor name="zed_camera_sensor" type="camera">
+      <always_on>1</always_on>
+      <update_rate>30</update_rate>
+      <visualize>true</visualize>
+      <pose>0 0 0 0 0 0</pose>
+      <camera name="zed_camera">
+        <horizontal_fov>1.91986</horizontal_fov>
+        <image>
+          <width>1280</width>
+          <height>720</height>
+          <format>R8G8B8</format>
+        </image>
+        <clip>
+          <near>0.3</near>
+          <far>20.0</far>
+        </clip>
+        <noise>
+          <type>gaussian</type>
+          <mean>0.0</mean>
+          <stddev>0.007</stddev>
+        </noise>
+      </camera>
+      <gz_frame_id>zed_camera_center</gz_frame_id>
+      <ignition_frame_id>zed_camera_center</ignition_frame_id>
+      <topic>zed/zed_node/rgb/image_rect_color</topic>
+    </sensor>
+ </gazebo>
+  <!-- Depth Camera Sensor with PointCloud2 -->
+ <gazebo reference="zed_camera_center">
+    <sensor name="zed_depth_sensor" type="depth">
+      <always_on>1</always_on>
+      <update_rate>30</update_rate>
+      <visualize>false</visualize>
+      <pose>0 0 0 0 0 0</pose>
+      <camera name="zed_depth">
+        <horizontal_fov>1.91986</horizontal_fov>
+        <image>
+          <width>1280</width>
+          <height>720</height>
+          <format>R_FLOAT32</format>
+        </image>
+        <clip>
+          <near>0.3</near>
+          <far>20.0</far>
+        </clip>
+        <noise>
+          <type>gaussian</type>
+          <mean>0.0</mean>
+          <stddev>0.007</stddev>
+        </noise>
+      </camera>
+      <gz_frame_id>zed_camera_center</gz_frame_id>
+      <ignition_frame_id>zed_camera_center</ignition_frame_id>
+      <topic>zed/zed_node/depth/depth_registered</topic>
+    </sensor>
+  </gazebo>
+
+
+  <!-- ========================================= -->
+  <!-- ROS 2 CONTROL AND OTHER PLUGINS           -->
+  <!-- ========================================= -->
+  
+  <gazebo>
+    <!-- ROS 2 Humble -->
+    <xacro:if value="${is_ignition}">
+      <plugin filename="ign_ros2_control-system" name="ign_ros2_control::IgnitionROS2ControlPlugin">
+        <parameters>$(find rover_controller)/config/rover_controllers.yaml</parameters>
+      </plugin>
+      <plugin filename="ignition-gazebo-imu-system" name="ignition::gazebo::systems::Imu">
+      </plugin>
+      <plugin filename="ignition-gazebo-sensors-system" name="ignition::gazebo::systems::Sensors">
+      </plugin>
+    </xacro:if>
+    
+    <!-- ROS 2 Iron or above -->
+    <xacro:unless value="${is_ignition}">
+      <plugin filename="gz_ros2_control-system" name="gz_ros2_control::GazeboSimROS2ControlPlugin">
+        <parameters>$(find rover_controller)/config/rover_controllers.yaml</parameters>
+      </plugin>
+      <plugin filename="gz-sim-imu-system" name="gz::sim::systems::Imu">
+      </plugin>
+      <plugin filename="gz-sim-sensors-system" name="gz::sim::systems::Sensors">
+      </plugin>
+    </xacro:unless>
+  </gazebo>
+
+</robot>

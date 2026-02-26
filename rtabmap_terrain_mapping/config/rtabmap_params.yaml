@@ -1,0 +1,78 @@
+# RTAB-Map parameters - Point Cloud Only (No Laser Scan)
+# Aligned with rover_ws workspace and ZED camera
+
+rtabmap:
+  ros__parameters:
+    use_sim_time: true
+    
+    # Frame configuration
+    frame_id: base_footprint
+    odom_frame_id: odom
+    map_frame_id: map
+    
+    # Subscribe ONLY to RGB-D and point cloud (no laser scan)
+    subscribe_depth: true
+    subscribe_rgb: true
+    subscribe_scan: false
+    subscribe_scan_cloud: true
+    
+    # Sync settings
+    approx_sync: true
+    queue_size: 10
+    
+    # Database
+    database_path: "~/.ros/rtabmap.db"
+    
+    # Detection
+    Rtabmap/DetectionRate: "1.0"
+    Rtabmap/TimeThr: "0.0"
+    
+    # Memory
+    Mem/IncrementalMemory: "true"
+    Mem/InitWMWithAllNodes: "false"
+    
+    # Registration - Use visual features (not ICP from laser)
+    Reg/Strategy: "0"
+    Reg/Force3DoF: "false"
+    
+    # Visual odometry
+    Odom/Strategy: "0"
+    Odom/ResetCountdown: "1"
+    Vis/MinInliers: "15"
+    Vis/InlierDistance: "0.1"
+    
+    # Loop closure
+    RGBD/LoopClosureReextractFeatures: "true"
+    RGBD/OptimizeMaxError: "3.0"
+    RGBD/ProximityBySpace: "true"
+    
+    # Grid map from point cloud
+    Grid/FromDepth: "true"
+    Grid/3D: "true"
+    Grid/CellSize: "0.03"
+    Grid/RangeMin: "0.3"
+    Grid/RangeMax: "8.0"
+    Grid/ClusterRadius: "0.08"
+    Grid/MinClusterSize: "3"
+    Grid/MaxGroundAngle: "45.0"
+    Grid/NormalK: "20"
+    Grid/MaxGroundHeight: "0.1"
+    Grid/MaxObstacleHeight: "2.0"
+    Grid/FlatObstacleDetected: "true"
+    Grid/RayTracing: "false"
+    
+    # Point cloud processing
+    Grid/NoiseFilteringRadius: "0.03"
+    Grid/NoiseFilteringMinNeighbors: "3"
+    
+    # Global map
+    GridGlobal/MinSize: "20.0"
+    GridGlobal/Eroded: "false"
+    GridGlobal/FootprintRadius: "0.3"
+    
+    # Cloud map publishing - DENSER 3D POINT CLOUD MAP
+    cloud_output_voxelized: true
+    cloud_voxel_size: 0.02
+    
+    # Map assembling
+    Rtabmap/CreateIntermediateNodes: "false"

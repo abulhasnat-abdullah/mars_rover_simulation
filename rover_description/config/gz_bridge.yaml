@@ -1,0 +1,60 @@
+# Bridge configuration for Gazebo to ROS2 topics
+# This file configures all sensor and data bridges between Gazebo and ROS2
+
+/**:
+  ros__parameters:
+    # Bridge configurations
+    bridges:
+      # Clock bridge - essential for simulation time synchronization
+      - topic_name: "clock"
+        ros_type_name: "rosgraph_msgs/msg/Clock"
+        gz_type_name: "gz.msgs.Clock"
+        direction: GZ_TO_ROS
+
+      # IMU sensor bridge
+      - topic_name: "imu"
+        ros_type_name: "sensor_msgs/msg/Imu"
+        gz_type_name: "gz.msgs.IMU"
+        direction: GZ_TO_ROS
+
+      # Lidar/Laser scanner bridge
+      - topic_name: "scan"
+        ros_type_name: "sensor_msgs/msg/LaserScan"
+        gz_type_name: "gz.msgs.LaserScan"
+        direction: GZ_TO_ROS
+
+      # GPS/NavSat bridge
+      - topic_name: "gps/fix"
+        ros_type_name: "sensor_msgs/msg/NavSatFix"
+        gz_type_name: "gz.msgs.NavSat"
+        direction: GZ_TO_ROS
+
+      # ZED Camera RGB image
+      - topic_name: "zed/zed_node/rgb/image_rect_color"
+        ros_type_name: "sensor_msgs/msg/Image"
+        gz_type_name: "gz.msgs.Image"
+        direction: GZ_TO_ROS
+
+      # ZED Camera RGB camera info
+      - topic_name: "zed/zed_node/rgb/camera_info"
+        ros_type_name: "sensor_msgs/msg/CameraInfo"
+        gz_type_name: "gz.msgs.CameraInfo"
+        direction: GZ_TO_ROS
+
+      # ZED Depth image
+      - topic_name: "zed/zed_node/depth/depth_registered"
+        ros_type_name: "sensor_msgs/msg/Image"
+        gz_type_name: "gz.msgs.Image"
+        direction: GZ_TO_ROS
+
+      # ZED Depth camera info
+      - topic_name: "zed/zed_node/depth/camera_info"
+        ros_type_name: "sensor_msgs/msg/CameraInfo"
+        gz_type_name: "gz.msgs.CameraInfo"
+        direction: GZ_TO_ROS
+
+      # ZED Point cloud
+      - topic_name: "zed/zed_node/depth/depth_registered/points"
+        ros_type_name: "sensor_msgs/msg/PointCloud2"
+        gz_type_name: "gz.msgs.PointCloudPacked"
+        direction: GZ_TO_ROS

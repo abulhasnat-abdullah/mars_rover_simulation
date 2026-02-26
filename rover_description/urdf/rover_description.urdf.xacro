@@ -1,0 +1,223 @@
+<?xml version="1.0" encoding="utf-8"?>
+<robot name="rover_description" xmlns:xacro="http://wiki.ros.org/xacro">
+
+  <!-- 1. Automatically detect the ROS distribution from the environment -->
+  <xacro:property name="ros_distro" value="$(env ROS_DISTRO)" />
+
+  <!-- 2. Logic: If distro is 'humble', set is_ignition to true. 
+     For 'jazzy' (or others like 'rolling'), it will be false. -->
+  <xacro:property name="is_ignition" value="${ros_distro == 'humble'}" />
+  <xacro:arg name="is_sim" default="true" />
+  <xacro:arg name="use_sim_time" default="true" />
+
+  <!-- Depth Camera Parameters -->
+  <xacro:arg name="camera_name" default="zed" />
+
+  <!-- Wheel properties -->
+  <xacro:property name="wheel_radius" value="0.135" />
+  <xacro:property name="wheel_width" value="0.15" />
+
+  <!-- Include the depth camera macro (local, no zed_wrapper dependency) -->
+  <xacro:include filename="$(find rover_description)/urdf/components/zed_macro.urdf.xacro" />
+  
+  <!-- Include the gazebo functionality -->
+  <xacro:include filename="$(find rover_description)/urdf/rover_gazebo.xacro" />
+  
+  <!-- Include ROS 2 CONTROL -->
+  <xacro:include filename="$(find rover_description)/urdf/rover_ros2_control.xacro" />
+  
+  <link name="base_footprint"/>
+
+  <joint name="base_joint" type="fixed">
+    <parent link="base_footprint"/>
+    <child link="base_link"/>
+    <origin xyz="0 0 0" rpy="0 0 0"/>
+  </joint>
+  
+  <link name="base_link">
+    <inertial>
+      <origin xyz="0.00283734598617559 -5.48612014375314E-06 0.406897744418785" rpy="0 0 0" />
+      <mass value="36.4090186352555" />
+      <inertia
+        ixx="1.14989797110002"
+        ixy="2.43735391975785E-05"
+        ixz="0.0182296282265289"
+        iyy="0.875741628239762"
+        iyz="3.36012534940276E-05"
+        izz="1.2152774654334" />
+    </inertial>
+    <visual>
+      <origin xyz="0 0 0" rpy="0 0 0" />
+      <geometry>
+        <mesh filename="package://rover_description/meshes/base_link.STL" />
+      </geometry>
+      <material name="rover_blue">
+        <color rgba="0.792156862745098 0.819607843137255 0.933333333333333 1" />
+      </material>
+    </visual>
+    <!-- USE BOX INSTEAD OF MESH FOR COLLISION -->
+    <collision>
+      <origin xyz="0 0 0.35" rpy="0 0 0" />
+      <geometry>
+        <box size="0.8 0.6 0.4"/>
+      </geometry>
+    </collision>
+  </link>
+
+  <!-- ==================== WHEEL MACRO ==================== -->
+  <xacro:macro name="wheel_link" params="name x_offset y_offset">
+    <link name="link_${name}">
+      <inertial>
+        <origin xyz="0 ${y_offset * 0.075} 0" rpy="0 0 0" />
+        <mass value="8.03286499782856" />
+        <inertia
+          ixx="0.0518365067203933"
+          ixy="0"
+          ixz="0"
+          iyy="0.0735497696989294"
+          iyz="0"
+          izz="0.0518365067203933" />
+      </inertial>
+      <visual>
+        <origin xyz="0 0 0" rpy="0 0 0" />
+        <geometry>
+          <mesh filename="package://rover_description/meshes/link_${name}.STL" />
+        </geometry>
+        <material name="sensor_grey">
+              <color rgba="0.3 0.3 0.3 1.0" />
+        </material>
+      </visual>
+      <!-- USE CYLINDER INSTEAD OF MESH FOR COLLISION -->
+      <collision>
+        <origin xyz="0 ${y_offset * 0.075} 0" rpy="${pi/2} 0 0" />
+        <geometry>
+          <cylinder radius="${wheel_radius}" length="${wheel_width}"/>
+        </geometry>
+      </collision>
+    </link>
+    
+    <joint name="joint_${name}" type="continuous">
+      <origin xyz="${x_offset} ${y_offset * 0.46} 0.135" rpy="0 0 0" />
+      <parent link="base_link" />
+      <child link="link_${name}" />
+      <axis xyz="0 1 0" />
+    </joint>
+  </xacro:macro>
+
+  <!-- Create all 4 wheels -->
+  <xacro:wheel_link name="BR" x_offset="-0.29633" y_offset="-1"/>
+  <xacro:wheel_link name="BL" x_offset="-0.29633" y_offset="1"/>
+  <xacro:wheel_link name="FR" x_offset="0.35401" y_offset="-1"/>
+  <xacro:wheel_link name="FL" x_offset="0.35401" y_offset="1"/>
+
+  <!-- Depth Camera (simulated stereo camera) -->
+  <xacro:depth_camera
+      name="$(arg camera_name)"
+      baseline="0.12"
+      height="0.03"/>
+
+  <joint name="zed_camera_mount" type="fixed">
+    <parent link="base_link"/>
+    <child link="$(arg camera_name)_camera_link"/>
+    <origin xyz="0.145 0 0.56" rpy="0 0 0"/>
+  </joint>
+
+  <link name="imu_link">
+    <inertial>
+      <origin xyz="0 0 0" rpy="0 0 0" />
+      <mass value="0.01" />
+      <inertia ixx="1e-6" ixy="0" ixz="0" iyy="1e-6" iyz="0" izz="1e-6" />
+    </inertial>
+    <visual>
+      <origin xyz="0 0 0" rpy="0 0 0" />
+      <geometry>
+        <mesh filename="package://rover_description/meshes/imu_link.STL" />
+      </geometry>
+      <material name="sensor_blue">
+          <color rgba="0.0 0.0 0.8 1.0" />
+      </material>
+    </visual>
+    <!-- USE BOX FOR IMU COLLISION -->
+    <collision>
+      <origin xyz="0 0 0" rpy="0 0 0" />
+      <geometry>
+        <box size="0.02 0.02 0.01"/>
+      </geometry>
+    </collision>
+  </link>
+  
+  <joint name="imu_joint" type="fixed">
+    <origin xyz="0 0 0.5" rpy="0 0 0" />
+    <parent link="base_link" />
+    <child link="imu_link" />
+    <axis xyz="0 0 0" />
+  </joint>
+
+  <link name="laser_link">
+    <inertial>
+      <origin xyz="0 0 0" rpy="0 0 0" />
+      <mass value="0.1" />
+      <inertia ixx="1e-5" ixy="0" ixz="0" iyy="1e-5" iyz="0" izz="1e-5" />
+    </inertial>
+    <visual>
+      <origin xyz="0 0 0" rpy="0 0 0" />
+      <geometry>
+        <mesh filename="package://rover_description/meshes/laser_link.STL" />
+      </geometry>
+      <material name="lidar_grey">
+          <color rgba="0.3 0.3 0.3 1.0" />  <!-- Dark grey color -->
+      </material>
+    </visual>
+    <!-- USE CYLINDER FOR LIDAR COLLISION -->
+    <collision>
+      <origin xyz="0 0 0" rpy="0 0 0" />
+      <geometry>
+        <cylinder radius="0.04" length="0.05"/>
+      </geometry>
+    </collision>
+  </link>
+
+  <joint name="laser_joint" type="fixed">
+    <origin xyz="0 0 0.61" rpy="0 0 0" />
+    <parent link="base_link" />
+    <child link="laser_link" />
+    <axis xyz="0 0 0" />
+  </joint>
+
+  <!-- GPS Link -->
+<link name="gps_link">        
+        <sensor name="navsat" type="navsat">
+          <always_on>true</always_on>
+          <update_rate>1</update_rate>
+          <topic>gps/fix</topic>
+          <gz_frame_id>gps_link</gz_frame_id>   
+          <navsat>
+            <position_sensing>
+              <horizontal>
+              <!-- Be carefull setting this.
+              Units in degree not in meters https://github.com/gazebosim/sdformat/issues/1572 -->
+                <noise type="gaussian">
+                  <mean>0.0</mean>
+                  <stddev>0.0</stddev>
+                </noise>
+              </horizontal>
+              <vertical>
+                <noise type="gaussian">
+                  <mean>0.0</mean>
+                  <stddev>0.0</stddev>
+                </noise>
+              </vertical>
+            </position_sensing>
+          </navsat>
+        </sensor>          
+      </link>
+
+
+<joint name="gps_joint" type="fixed">
+  <origin xyz="0.1 0 0.65" rpy="0 0 0" />  <!-- Positioned above the lidar -->
+  <parent link="base_link" />
+  <child link="gps_link" />
+  <axis xyz="0 0 0" />
+</joint>
+
+</robot>

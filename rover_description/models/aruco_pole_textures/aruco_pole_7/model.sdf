@@ -1,0 +1,114 @@
+<?xml version="1.0" ?>
+<sdf version="1.7">
+  <!-- Auto-generated SDF for ArUco Pole with Tag 7 -->
+  <!-- Box visual faces are 0.1 wide/deep, 0.2 high. Box is closed top/bottom. -->
+  <model name="aruco_pole_7"> <!-- Descriptive model name -->
+    <static>true</static>
+    <link name="aruco_pole_link">
+
+      <!-- === Pole === -->
+      <collision name="pole_collision">
+        <pose>0 0 0.17250 0 0 0</pose>
+        <geometry><cylinder><radius>0.01000</radius><length>0.34500</length></cylinder></geometry>
+      </collision>
+      <visual name="pole_visual">
+        <pose>0 0 0.17250 0 0 0</pose>
+        <geometry><cylinder><radius>0.01000</radius><length>0.34500</length></cylinder></geometry>
+        <material><script><uri>file://media/materials/scripts/gazebo.material</uri><name>Gazebo/Wood</name></script></material>
+      </visual>
+
+      <!-- === Main Marker Box COLLISION === -->
+      <!-- Defines the physical boundary -->
+      <collision name="box_collision">
+        <pose>0 0 0.44500 0 0 0</pose>
+        <geometry><box><size>0.15000 0.15000 0.20000</size></box></geometry>
+      </collision>
+
+      <!-- === Textured Side Panels (Visuals only) === -->
+      <!-- Sized and positioned to match the collision box faces -->
+
+      <!-- Front Face Panel (+X) -->
+      <visual name="box_face_front_panel">
+        <pose>0.07500 0 0.44500 0 0 0</pose>
+        <!-- Size: Thickness(X), Width(Y=Depth), Height(Z) -->
+        <geometry><box><size>0.00100 0.15000 0.20000</size></box></geometry>
+        <material>
+          <ambient>1 1 1 1</ambient><diffuse>1 1 1 1</diffuse><specular>0 0 0 1</specular>
+          <pbr><metal>
+            <albedo_map>model://aruco_pole_textures/materials/textures/aruco_tag_7.png</albedo_map>
+            <metalness>0.0</metalness><roughness>1.0</roughness>
+          </metal></pbr>
+        </material>
+      </visual>
+
+      <!-- Back Face Panel (-X) -->
+      <visual name="box_face_back_panel">
+        <pose>-0.07500 0 0.44500 0 0 0</pose>
+         <!-- Size: Thickness(X), Width(Y=Depth), Height(Z) -->
+        <geometry><box><size>0.00100 0.15000 0.20000</size></box></geometry>
+         <material>
+           <ambient>1 1 1 1</ambient><diffuse>1 1 1 1</diffuse><specular>0 0 0 1</specular>
+           <pbr><metal>
+             <albedo_map>model://aruco_pole_textures/materials/textures/aruco_tag_7.png</albedo_map>
+             <metalness>0.0</metalness><roughness>1.0</roughness>
+           </metal></pbr>
+         </material>
+      </visual>
+
+      <!-- Right Face Panel (+Y) -->
+      <visual name="box_face_right_panel">
+        <pose>0 0.07500 0.44500 0 0 0</pose>
+         <!-- Size: Width(X), Thickness(Y), Height(Z) -->
+        <geometry><box><size>0.15000 0.00100 0.20000</size></box></geometry>
+         <material>
+           <ambient>1 1 1 1</ambient><diffuse>1 1 1 1</diffuse><specular>0 0 0 1</specular>
+           <pbr><metal>
+             <albedo_map>model://aruco_pole_textures/materials/textures/aruco_tag_7.png</albedo_map>
+             <metalness>0.0</metalness><roughness>1.0</roughness>
+           </metal></pbr>
+         </material>
+      </visual>
+
+      <!-- Left Face Panel (-Y) -->
+      <visual name="box_face_left_panel">
+        <pose>0 -0.07500 0.44500 0 0 0</pose>
+        <!-- Size: Width(X), Thickness(Y), Height(Z) -->
+        <geometry><box><size>0.15000 0.00100 0.20000</size></box></geometry>
+         <material>
+           <ambient>1 1 1 1</ambient><diffuse>1 1 1 1</diffuse><specular>0 0 0 1</specular>
+           <pbr><metal>
+             <albedo_map>model://aruco_pole_textures/materials/textures/aruco_tag_7.png</albedo_map>
+             <metalness>0.0</metalness><roughness>1.0</roughness>
+           </metal></pbr>
+         </material>
+      </visual>
+
+      <!-- === Top and Bottom Caps (Visuals only, No Texture) === -->
+
+      <!-- Top Face Panel (+Z) -->
+      <visual name="box_face_top_panel">
+        <pose>0 0 0.54500 0 0 0</pose>
+        <!-- Size: Width(X), Length(Y=Depth), Thickness(Z) -->
+        <geometry><box><size>0.15000 0.15000 0.00100</size></box></geometry>
+        <material>
+          <ambient>0.590 0.571 0.560 1.0</ambient>
+          <diffuse>0.843 0.816 0.800 1</diffuse>
+          <specular>0.1 0.1 0.1 1</specular>
+        </material>
+      </visual>
+
+      <!-- Bottom Face Panel (-Z) -->
+      <visual name="box_face_bottom_panel">
+        <pose>0 0 0.34500 0 0 0</pose>
+        <!-- Size: Width(X), Length(Y=Depth), Thickness(Z) -->
+        <geometry><box><size>0.15000 0.15000 0.00100</size></box></geometry>
+         <material>
+           <ambient>0.590 0.571 0.560 1.0</ambient>
+           <diffuse>0.843 0.816 0.800 1</diffuse>
+           <specular>0.1 0.1 0.1 1</specular>
+         </material>
+      </visual>
+
+    </link>
+  </model>
+</sdf>
