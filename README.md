@@ -5,8 +5,11 @@ A comprehensive ROS2 Jazzy workspace for simulating and controlling a 4-wheel di
 
 - **Gazebo Simulation** with multiple world environments (Mars terrain, Sonoma raceway)
 - **SLAM Mapping** using SLAM Toolbox (2D LiDAR-based)
+- **SLAM + Nav2 (No GPS)** navigation via `rover_nav2_slam_bringup`
 - **RTAB-Map** for RGB-D based 2D/3D terrain mapping
 - **GPS Navigation** with Nav2 waypoint follower (A* and RPP planners)
+- **GPS Waypoint Logging & Following** using `gps_waypoint_logger` and `logged_waypoint_follower`
+- **ArUco Tag Navigation** for tag-based localization and navigation workflows
 - **AMCL Localization** for map-based navigation
 - **Dual EKF Localization** with NavSat transform for GPS integration
 - **ZED Camera Simulation** with depth sensing
