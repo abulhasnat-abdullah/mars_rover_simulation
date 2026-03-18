@@ -203,6 +203,16 @@ This launches:
 - NavSat transform for GPS → map conversion
 - Nav2 with GPS waypoint follower
 
+For GPS waypoint workflows:
+
+```bash
+# Terminal 2: Log waypoints to a yaml file
+ros2 run nav2_gps_waypoint_follower gps_waypoint_logger </path/to/yaml/file.yaml>
+
+# Terminal 3: Follow logged waypoints from yaml
+ros2 run nav2_gps_waypoint_follower logged_waypoint_follower </path/to/yaml/file.yaml>
+```
+
 ---
 
 ### RTAB-Map Terrain Mapping
@@ -242,6 +252,34 @@ ros2 launch rtabmap_terrain_mapping rtabmap_combined_mapping.launch.py
 
 ---
 
+### ArTag-Based Navigation
+
+**Terminal 1:** Launch simulation with GPS navigation
+```bash
+ros2 launch rover_bringup simulated_robot.launch.py world_name:=mars_yard world_extension:=.sdf gps_nav:=true
+```
+
+**Terminal 2:** Launch ArUco tag navigation
+```bash
+ros2 launch aruco_nav aruco_nav.launch.py
+```
+
+---
+
+### SLAM Navigation (No GPS)
+
+**Terminal 1:** Launch rover simulation
+```bash
+ros2 launch rover_bringup simulated_robot.launch.py world_name:=mars_yard world_extension:=.sdf
+```
+
+**Terminal 2:** Launch Nav2 + SLAM bringup
+```bash
+ros2 launch rover_nav2_slam_bringup slam_nav2.launch.py
+```
+
+---
+
 ## Package Overview
 
 | Package | Description |
@@ -254,6 +292,8 @@ ros2 launch rtabmap_terrain_mapping rtabmap_combined_mapping.launch.py
 | `rover_navigation` | Nav2 config, behavior trees, costmaps |
 | `rtabmap_terrain_mapping` | RTAB-Map 3D mapping with terrain analysis |
 | `nav2_gps_waypoint_follower` | GPS waypoint navigation with dual EKF |
+| `aruco_nav` | ArUco tag-based navigation and localization |
+| `rover_nav2_slam_bringup` | Navigation with SLAM and Nav2 without GPS |
 | `explore` | Frontier-based autonomous exploration |
 | `pointcloud_to_laserscan` | Convert depth camera to 2D laser scan |
 | `rover_utils` | Utility scripts and tools |
