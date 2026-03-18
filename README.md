@@ -54,6 +54,8 @@ sudo apt install -y \
 
 The workspace includes a full Docker setup at the repository root:
 
+- Docker Hub: https://hub.docker.com/repository/docker/abulhasnatabdullah/rover_ws/
+
 - `Dockerfile` - ROS 2 Jazzy image with rosdep + colcon tooling
 - `docker-compose.yml` - dev runtime (host networking, RViz/Gazebo GUI support)
 - `docker/entrypoint.sh` - auto-sources ROS and workspace overlays
