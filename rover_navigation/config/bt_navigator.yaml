@@ -2,7 +2,7 @@ bt_navigator:
   ros__parameters:
     use_sim_time: true
     global_frame: map
-    robot_base_frame: base_link
+    robot_base_frame: base_footprint
     odom_topic: /rover_controller/odom
     transform_tolerance: 0.3
     default_server_timeout: 1000

@@ -1,6 +1,6 @@
 explore_node:
   ros__parameters:
-    robot_base_frame: base_footprint
+    robot_base_frame: panther/base_link
     costmap_topic: /global_costmap/costmap
     costmap_updates_topic: /global_costmap/costmap_updates
     visualize: true

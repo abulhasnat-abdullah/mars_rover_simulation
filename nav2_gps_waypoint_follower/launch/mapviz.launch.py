@@ -5,22 +5,34 @@ import launch_ros.actions
 import os
 from ament_index_python.packages import get_package_share_directory
 
+
+use_sim_time = launch.substitutions.LaunchConfiguration('use_sim_time')
+
 gps_wpf_dir = get_package_share_directory("nav2_gps_waypoint_follower")
 mapviz_config_file = os.path.join(gps_wpf_dir, "config", "gps_wpf_demo.mvc")
 
 
 def generate_launch_description():
     return launch.LaunchDescription([
+        launch.actions.DeclareLaunchArgument(
+            'use_sim_time',
+            default_value='true',
+            description='Use simulation time'
+        ),
         launch_ros.actions.Node(
             package="mapviz",
             executable="mapviz",
             name="mapviz",
-            parameters=[{"config": mapviz_config_file}]
+            parameters=[{
+                "config": mapviz_config_file,
+                "use_sim_time": use_sim_time,
+            }]
         ),
         launch_ros.actions.Node(
             package="swri_transform_util",
             executable="initialize_origin.py",
             name="initialize_origin",
+            parameters=[{"use_sim_time": use_sim_time}],
             remappings=[
                 ("fix", "gps/fix"),
             ],
@@ -29,6 +41,7 @@ def generate_launch_description():
             package="tf2_ros",
             executable="static_transform_publisher",
             name="swri_transform",
+            parameters=[{"use_sim_time": use_sim_time}],
             arguments=["0", "0", "0", "0", "0", "0", "map", "origin"]
         )
     ])

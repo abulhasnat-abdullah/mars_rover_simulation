@@ -7,9 +7,7 @@
   <maintainer email="abdkalam22@gmail.com">abulhasnat-abdullah</maintainer>
   <license>Apache 2.0</license>
   <buildtool_depend>ament_cmake</buildtool_depend>
-  <exec_depend>rplidar_ros</exec_depend>
   <exec_depend>rviz2</exec_depend>
-  <exec_depend>rover_firmware</exec_depend>
   <exec_depend>rover_controller</exec_depend>
   <exec_depend>rover_description</exec_depend>
   <exec_depend>rover_localization</exec_depend>

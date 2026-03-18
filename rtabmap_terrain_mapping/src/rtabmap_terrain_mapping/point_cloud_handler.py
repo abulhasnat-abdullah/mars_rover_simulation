@@ -16,7 +16,7 @@ class PointCloudHandler(Node):
         # Parameters
         self.declare_parameter('voxel_size', 0.05)
         self.declare_parameter('min_points', 10)
-        self.declare_parameter('input_topic', '/zed/zed_node/depth/depth_registered/points')
+        self.declare_parameter('input_topic', '/zed/zed_node/point_cloud/cloud_registered')
         self.declare_parameter('output_topic', '/terrain/processed_cloud')
         
         input_topic = self.get_parameter('input_topic').value

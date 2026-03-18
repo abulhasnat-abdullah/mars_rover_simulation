@@ -12,7 +12,7 @@ slam_toolbox:
     odom_frame: odom
     map_frame: map
     base_frame: base_footprint
-    scan_topic: /scan
+    scan_topic: /scan_converted
     use_map_saver: true
     slam_mode: true
     
@@ -24,7 +24,7 @@ slam_toolbox:
     
     # Timing parameters
     throttle_scans: 2
-    transform_publish_period: 0.1
+    transform_publish_period: 0.0  # 0 disables map->odom TF publishing otherwise 0.1 is a good value for real robots
     map_update_interval: 2.0
     transform_timeout: 0.5  # Increased for reliability
     tf_buffer_duration: 30.0

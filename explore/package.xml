@@ -6,8 +6,9 @@
 
   <description>Lightweight frontier-based exploration ROS2 port.</description>
 
-  <maintainer email="abdkalam22@gmail.com">abd</maintainer>
-  <license>Apache 2.0</license>
+  <author email="candres.alv@gmail.com">Carlos Alvarez</author>
+  <maintainer email="candres.alv@gmail.com">Carlos Alvarez</maintainer>
+  <license>BSD</license>
 
   <buildtool_depend>ament_cmake</buildtool_depend>
 

@@ -2,18 +2,26 @@ from launch import LaunchDescription
 from launch.actions import DeclareLaunchArgument
 from launch.substitutions import LaunchConfiguration
 from launch_ros.actions import Node
+from launch_ros.parameter_descriptions import ParameterValue
 
 def generate_launch_description():
 
     cloud_in_topic = LaunchConfiguration('cloud_in_topic')
+    use_sim_time = LaunchConfiguration('use_sim_time')
 
     return LaunchDescription([
 
         # Declare launch arguments
         DeclareLaunchArgument(
             'cloud_in_topic',
-            default_value='/zed/zed_node/depth/depth_registered/points',
+            default_value='/zed/zed_node/point_cloud/cloud_registered',
             description='Input point cloud topic'
+        ),
+
+        DeclareLaunchArgument(
+            'use_sim_time',
+            default_value='true',
+            description='Use simulation time'
         ),
 
 
@@ -27,10 +35,12 @@ def generate_launch_description():
                 ('scan', '/scan_converted')
             ],
             parameters=[{
-                'target_frame': 'zed_camera_center', 
-                'transform_tolerance': 0.1,  # Increased for reliability
-                'min_height': -0.3,
-                'max_height': 1.5,
+                'use_sim_time': ParameterValue(use_sim_time, value_type=bool),
+                'target_frame': 'laser_link',  # Changed to match exactly where your lidar is mounted
+                'transform_tolerance': 0.1,  
+                'queue_size': 1,
+                'min_height': -0.05,         # 5cm below the lidar
+                'max_height': 0.05,          # 5cm above the lidar
                 'angle_min': -3.14159,
                 'angle_max': 3.14159,
                 'angle_increment': 0.0087,

@@ -52,15 +52,6 @@ def generate_launch_description():
         description="Enable Nav2 for Autonomous Navigation"
     )
     
-    # # ========== HARDWARE INTERFACE ==========
-    # # ODrive hardware interface with Tfs and controller manager
-    # hardware_interface = IncludeLaunchDescription(
-    #     PythonLaunchDescriptionSource(
-    #         os.path.join(rover_firmware_dir, "launch", "hardware_interface.launch.py")
-    #     )
-    # )
-    
-
     # ========== LIDAR DRIVER ==========
     # RPLidar A1 driver node
     laser_driver = Node(

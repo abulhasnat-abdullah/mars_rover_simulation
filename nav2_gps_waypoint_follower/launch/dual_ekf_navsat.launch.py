@@ -57,11 +57,14 @@ def generate_launch_description():
                 output="screen",
                 parameters=[rl_params_file, {"use_sim_time": True}],
                 remappings=[
-                    ("imu/data", "imu/data"),
+                    ("imu/data", "imu/out"),
                     ("gps/fix", "gps/fix"),
                     ("gps/filtered", "gps/filtered"),
                     ("odometry/gps", "odometry/gps"),
-                    ("odometry/filtered", "odometry/global"),
+                    # Use local (odom-frame) filtered odometry as input for navsat_transform.
+                    # Using the global EKF output here creates a circular dependency
+                    # (map EKF depends on odometry/gps which navsat_transform produces).
+                    ("odometry/filtered", "odometry/local"),
                 ],
             ),
         ]

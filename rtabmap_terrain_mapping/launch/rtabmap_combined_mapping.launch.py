@@ -64,16 +64,17 @@ def generate_launch_description():
                 'odom_frame_id': 'odom',
                 'map_frame_id': 'map',
                 'approx_sync': True,
-                'queue_size': 10,
+                'sync_queue_size': 30,
+                'topic_queue_size': 30,
                 # Topic parameters instead of remappings for odom
                 'odom_topic': LaunchConfiguration('odom_topic'),
             }
         ],
         remappings=[
-            ('rgb/image', '/zed/zed_node/rgb/image_rect_color'),
-            ('rgb/camera_info', '/zed/zed_node/rgb/camera_info'),
+            ('rgb/image', '/zed/zed_node/rgb/color/rect/image'),
+            ('rgb/camera_info', '/zed/zed_node/rgb/color/rect/image/camera_info'),
             ('depth/image', '/zed/zed_node/depth/depth_registered'),
-            ('scan_cloud', '/zed/zed_node/depth/depth_registered/points'),
+            ('scan_cloud', '/zed/zed_node/point_cloud/cloud_registered'),
             # Remap all outputs to rtabmap namespace to avoid collisions
             ('cloud_map', '/rtabmap/cloud_map'),
             ('cloud_ground', '/rtabmap/cloud_ground'),
@@ -97,12 +98,12 @@ def generate_launch_description():
         output='screen',
         parameters=[{
             'use_sim_time': LaunchConfiguration('use_sim_time'),
-            'assembling_time': 0.0,  # 0 = assemble all
+            'assembling_time': 5.0,
             'fixed_frame_id': 'map',
             'voxel_size': 0.05,
         }],
         remappings=[
-            ('cloud', '/zed/zed_node/depth/depth_registered/points'),
+            ('cloud', '/zed/zed_node/point_cloud/cloud_registered'),
             ('odom', LaunchConfiguration('odom_topic')),
             ('assembled_cloud', '/rtabmap/assembled_cloud'),
         ]

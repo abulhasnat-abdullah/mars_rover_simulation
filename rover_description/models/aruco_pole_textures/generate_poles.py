@@ -4,8 +4,8 @@ import os
 # === USER SETTINGS ===
 
 # Range of ArUco Tag IDs to generate models for
-START_ID = 0
-END_ID_INCLUSIVE = 50  # Generate models for IDs 0, 1, ..., 50
+START_ID = 51
+END_ID_INCLUSIVE = 64  # Generate models for IDs 51, 52, ..., 64
 
 # --- Local Output Configuration ---
 # Directory where the script will create subdirectories for each model
@@ -23,9 +23,9 @@ GAZEBO_TEXTURE_DIR_NAME = "aruco_pole_textures"
 # Directly match the dimensions from the target XML example
 POLE_RADIUS = 0.01
 POLE_LENGTH = 0.345
-BOX_WIDTH = 0.15    # X-dimension of the box
-BOX_DEPTH = 0.15    # Y-dimension of the box (matches width in target collision)
-BOX_HEIGHT = 0.20   # Z-dimension of the box (height of the side panels)
+BOX_WIDTH = 0.25    # X-dimension of the box
+BOX_DEPTH = 0.25    # Y-dimension of the box (matches width in target collision)
+BOX_HEIGHT = 0.31   # Z-dimension of the box (height of the side panels)
 PANEL_THICKNESS = 0.001  # Thickness for all visual panels
 
 # --- Derived Dimensions (Calculated automatically) ---

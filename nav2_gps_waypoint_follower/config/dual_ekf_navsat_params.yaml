@@ -117,15 +117,28 @@ ekf_filter_node_map:
 navsat_transform:
   ros__parameters:
     frequency: 10.0
-    delay: 3.0
+    delay: 0.0
     magnetic_declination_radians: 0.0
     yaw_offset: 0.0
     zero_altitude: true
     broadcast_cartesian_transform: false
     broadcast_cartesian_transform_as_parent_frame: false
     publish_filtered_gps: true
-    use_odometry_yaw: true
+    # In sim (and with a proper IMU), yaw from IMU is typically more stable than
+    # wheel-odom yaw. Using odom yaw here can make the GPS->ENU projection
+    # slowly rotate, which shows up as continuous map->odom motion.
+    use_odometry_yaw: false
     wait_for_datum: false
+    use_local_cartesian: true
     
-    # CRITICAL: Set datum to match world origin
+    # CRITICAL: Must match your simulation world's spherical_coordinates
+    # rover_description/worlds/mars_yard.sdf:
+    # latitude_deg: 50.088384
+    # longitude_deg: 19.939128
+
+    # for sonoma
+    # [38.161479, -122.454630, 0.0]
+    # for mars
+    # [50.088384, 19.939128, 0.0]
+
     datum: [38.161479, -122.454630, 0.0]

@@ -16,6 +16,10 @@ twist_mux:
         topic: key_vel
         timeout: 0.5
         priority: 90
+      aruco:
+        topic: aruco_cmd_vel
+        timeout: 0.5
+        priority: 85
       navigation: 
         topic: cmd_vel
         timeout: 0.5

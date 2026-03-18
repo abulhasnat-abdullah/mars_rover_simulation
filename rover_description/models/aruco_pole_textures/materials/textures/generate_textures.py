@@ -5,7 +5,7 @@ import os
 
 # === USER SETTINGS ===
 FONT_PATH = "/usr/share/fonts/truetype/dejavu/DejaVuSans-Bold.ttf"
-MARKER_DICT = cv2.aruco.DICT_4X4_100
+MARKER_DICT = cv2.aruco.DICT_5X5_250
 CANVAS_SIZE = (500, 700)        # (width, height) - adjusted to match reference ratio
 SIDE_COLOR = (203, 195, 195)      # Dark gray side strips
 BG_COLOR = (235, 231, 225)   # Light gray background
@@ -136,8 +136,8 @@ def make_sign(
 
 # Main execution block (no changes needed here from previous version)
 if __name__ == "__main__":
-    start_id = 0
-    end_id = 50  # Inclusive
+    start_id = 51
+    end_id = 64  # Inclusive
 
     if not os.path.exists(OUTPUT_DIR):
         os.makedirs(OUTPUT_DIR)

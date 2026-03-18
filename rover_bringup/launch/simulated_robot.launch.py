@@ -28,6 +28,12 @@ def generate_launch_description():
         default_value="true",
         description="Use simulation time. Must be true for Gazebo."
     )
+
+    use_rviz_arg = DeclareLaunchArgument(
+        name="use_rviz",
+        default_value="true",
+        description="Whether to start RViz2 (used by gps_nav)."
+    )
     
     world_name_arg = DeclareLaunchArgument(
         name="world_name",
@@ -58,11 +64,17 @@ def generate_launch_description():
         default_value="false",
         description="Enable GPS Navigation"
     )
-    
+
     rtab_arg = DeclareLaunchArgument(
         name="rtab",
         default_value="false",
         description="Enable RTAB-Map combined terrain mapping"
+    )
+
+    pc2ls_arg = DeclareLaunchArgument(
+        name="pc2ls",
+        default_value="true",
+        description="Enable pointcloud_to_laserscan (publishes /scan_converted)"
     )
     # ========== COMPONENT LAUNCH FILES ==========
     
@@ -194,7 +206,27 @@ def generate_launch_description():
                 "gps_navigation.launch.py"
             ])
         ),
+        launch_arguments={
+            "use_sim_time": LaunchConfiguration("use_sim_time"),
+            "use_rviz": LaunchConfiguration("use_rviz"),
+        }.items(),
         condition=IfCondition(LaunchConfiguration("gps_nav"))
+    )
+
+    pointcloud_to_laserscan = IncludeLaunchDescription(
+        PythonLaunchDescriptionSource(
+            PathJoinSubstitution([
+                FindPackageShare("pointcloud_to_laserscan"),
+                "launch",
+                "pointcloud_to_laserscan_launch.py",
+            ])
+        ),
+        launch_arguments={
+            # This topic is already bridged from Gazebo in rover_description/launch/gazebo.launch.py
+            "cloud_in_topic": "/zed/zed_node/point_cloud/cloud_registered",
+            "use_sim_time": LaunchConfiguration("use_sim_time"),
+        }.items(),
+        condition=IfCondition(LaunchConfiguration("pc2ls"))
     )
 
     # RTAB-Map combined terrain mapping
@@ -255,6 +287,11 @@ def generate_launch_description():
         actions=[gps_navigation]
     )
 
+    delayed_pointcloud_to_laserscan = TimerAction(
+        period=18.0,  # After sensor bridges start (sensor_delay is 8s) and zed pointcloud is available
+        actions=[pointcloud_to_laserscan]
+    )
+
     delayed_rtabmap = TimerAction(
         period=20.0,  # After SLAM/localization stabilizes
         actions=[rtabmap_combined]
@@ -264,12 +301,14 @@ def generate_launch_description():
     return LaunchDescription([
         # Arguments
         use_sim_time_arg,
+        use_rviz_arg,
         world_name_arg,
         world_extension_arg,
         mapping_arg,
         navigation_arg,
         gps_nav_arg,
         rtab_arg,
+        pc2ls_arg,
         
         # Launch sequence
         gazebo,                          # t=0s: Simulation starts
@@ -280,6 +319,7 @@ def generate_launch_description():
         delayed_gps_localization,        # t=14s: GPS Localization starts (if gps_nav=true)
         delayed_slam,                    # t=18s: SLAM starts (if mapping=true)
         delayed_gps_navigation,
+        delayed_pointcloud_to_laserscan,
         delayed_navigation,
         delayed_rtabmap,                 # t=20s: RTAB-Map starts (if rtab=true)
     ])  

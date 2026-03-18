@@ -84,10 +84,7 @@ install(DIRECTORY
   rviz
   DESTINATION share/${PROJECT_NAME}
 )
-install(DIRECTORY
-  scripts
-  DESTINATION share/${PROJECT_NAME}
-)
+
 
 add_executable(explore
   src/costmap_client.cpp

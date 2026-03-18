@@ -1,29 +1,49 @@
 <?xml version="1.0"?>
-<!--
-  Depth camera macro for simulation (standalone, no zed_wrapper dependency)
-  This provides the same frame structure as a ZED camera for compatibility.
--->
-
 <robot xmlns:xacro="http://wiki.ros.org/xacro">
   <xacro:property name="M_PI" value="3.1415926535897931" />
 
-  <!-- Material definitions -->
   <material name="depth_camera_mat">
     <color rgba="0.25 0.25 0.25 1.0"/>
   </material>
 
-  <!--
-    Depth Camera Macro
-    Parameters:
-      - name: the camera's name (e.g., "zed")
-      - baseline: distance between stereo cameras (default 0.12m for ZED2i-like)
-      - height: camera height (default 0.03m)
-  -->
-  <xacro:macro name="depth_camera" params="name=zed baseline=0.12 height=0.03">
-    
-    <!-- Camera mounting point (the threaded screw hole in the bottom) -->
+  <!-- Keep params aligned with zed-ros2-wrapper macro for compatibility. -->
+  <xacro:macro name="zed_camera" params="name=zed model=virtual enable_gnss=false custom_baseline=0.12 gnss_xyz:='0 0 0' gnss_rpy:='0 0 0'">
+
+    <xacro:if value="${model == 'zed'}">
+      <xacro:property name="baseline" value="0.12" />
+      <xacro:property name="height" value="0.03" />
+      <xacro:property name="bottom_slope" value="0.05" />
+      <xacro:property name="optical_offset_x" value="-0.01" />
+      <xacro:property name="mono" value="false" />
+    </xacro:if>
+
+    <xacro:if value="${model == 'zed2'}">
+      <xacro:property name="baseline" value="0.12" />
+      <xacro:property name="height" value="0.03" />
+      <xacro:property name="bottom_slope" value="0.05" />
+      <xacro:property name="optical_offset_x" value="-0.01" />
+      <xacro:property name="mono" value="false" />
+    </xacro:if>
+
+    <xacro:if value="${model == 'virtual'}">
+      <xacro:property name="baseline" value="${custom_baseline}" />
+      <xacro:property name="height" value="0.031" />
+      <xacro:property name="bottom_slope" value="0.0" />
+      <xacro:property name="optical_offset_x" value="0.0" />
+      <xacro:property name="mono" value="false" />
+    </xacro:if>
+
+    <xacro:if value="${model == 'zedxonegs' or model == 'zedxone4k' or model == 'zedxonehdr'}">
+      <xacro:property name="baseline" value="0.0" />
+      <xacro:property name="height" value="0.031" />
+      <xacro:property name="bottom_slope" value="0.0" />
+      <xacro:property name="optical_offset_x" value="0.0" />
+      <xacro:property name="mono" value="true" />
+    </xacro:if>
+
+    <!-- Camera mounting point -->
     <link name="${name}_camera_link" />
-    
+
     <!-- Camera Center -->
     <link name="${name}_camera_center">
       <visual>
@@ -45,44 +65,96 @@
         <inertia ixx="1e-4" ixy="0" ixz="0" iyy="1e-4" iyz="0" izz="1e-4"/>
       </inertial>
     </link>
-    
+
     <joint name="${name}_camera_center_joint" type="fixed">
       <parent link="${name}_camera_link"/>
       <child link="${name}_camera_center"/>
-      <origin xyz="0 0 ${height/2}" rpy="0 0 0" />
+      <origin xyz="0 0 ${height/2}" rpy="0 ${bottom_slope} 0" />
     </joint>
 
-    <!-- Left Camera Frame -->
-    <link name="${name}_left_camera_frame" />
-    <joint name="${name}_left_camera_joint" type="fixed">
-      <parent link="${name}_camera_center"/>
-      <child link="${name}_left_camera_frame"/>
-      <origin xyz="0 ${baseline/2} 0" rpy="0 0 0" />
-    </joint>
+    <xacro:unless value="${mono}">
+      <!-- Left Camera -->
+      <link name="${name}_left_camera_frame" />
+      <joint name="${name}_left_camera_joint" type="fixed">
+        <parent link="${name}_camera_center"/>
+        <child link="${name}_left_camera_frame"/>
+        <origin xyz="${optical_offset_x} ${baseline/2} 0" rpy="0 0 0" />
+      </joint>
 
-    <!-- Left Camera Optical Frame (Z forward, X right, Y down) -->
-    <link name="${name}_left_camera_frame_optical"/>
-    <joint name="${name}_left_camera_optical_joint" type="fixed">
-      <origin xyz="0 0 0" rpy="-${M_PI/2} 0.0 -${M_PI/2}"/>
-      <parent link="${name}_left_camera_frame"/>
-      <child link="${name}_left_camera_frame_optical"/>
-    </joint>
+      <link name="${name}_left_camera_frame_optical"/>
+      <joint name="${name}_left_camera_optical_joint" type="fixed">
+        <origin xyz="0 0 0" rpy="-${M_PI/2} 0.0 -${M_PI/2}"/>
+        <parent link="${name}_left_camera_frame"/>
+        <child link="${name}_left_camera_frame_optical"/>
+      </joint>
 
-    <!-- Right Camera Frame -->
-    <link name="${name}_right_camera_frame" />
-    <joint name="${name}_right_camera_joint" type="fixed">
-      <parent link="${name}_camera_center"/>
-      <child link="${name}_right_camera_frame"/>
-      <origin xyz="0 -${baseline/2} 0" rpy="0 0 0" />
-    </joint>
+      <link name="${name}_right_camera_frame" />
+      <joint name="${name}_right_camera_joint" type="fixed">
+        <parent link="${name}_camera_center"/>
+        <child link="${name}_right_camera_frame"/>
+        <origin xyz="${optical_offset_x} -${baseline/2} 0" rpy="0 0 0" />
+      </joint>
 
-    <!-- Right Camera Optical Frame (Z forward, X right, Y down) -->
-    <link name="${name}_right_camera_frame_optical"/>
-    <joint name="${name}_right_camera_optical_joint" type="fixed">
-      <origin xyz="0 0 0" rpy="-${M_PI/2} 0.0 -${M_PI/2}"/>
-      <parent link="${name}_right_camera_frame"/>
-      <child link="${name}_right_camera_frame_optical"/>
-    </joint>
+      <link name="${name}_right_camera_frame_optical"/>
+      <joint name="${name}_right_camera_optical_joint" type="fixed">
+        <origin xyz="0 0 0" rpy="-${M_PI/2} 0.0 -${M_PI/2}"/>
+        <parent link="${name}_right_camera_frame"/>
+        <child link="${name}_right_camera_frame_optical"/>
+      </joint>
+
+      <link name="${name}_temp_left_link" />
+      <joint name="${name}_temp_left_joint" type="fixed">
+        <parent link="${name}_left_camera_frame"/>
+        <child link="${name}_temp_left_link"/>
+        <origin xyz="0 0 0" rpy="0 0 0" />
+      </joint>
+
+      <link name="${name}_temp_right_link" />
+      <joint name="${name}_temp_right_joint" type="fixed">
+        <parent link="${name}_right_camera_frame"/>
+        <child link="${name}_temp_right_link"/>
+        <origin xyz="0 0 0" rpy="0 0 0" />
+      </joint>
+
+      <link name="${name}_mag_link" />
+      <joint name="${name}_mag_joint" type="fixed">
+        <parent link="${name}_camera_center"/>
+        <child link="${name}_mag_link"/>
+        <origin xyz="0 0 0" rpy="0 0 0" />
+      </joint>
+
+      <link name="${name}_baro_link" />
+      <joint name="${name}_baro_joint" type="fixed">
+        <parent link="${name}_camera_center"/>
+        <child link="${name}_baro_link"/>
+        <origin xyz="0 0 0" rpy="0 0 0" />
+      </joint>
+    </xacro:unless>
+
+    <xacro:if value="${mono}">
+      <link name="${name}_camera_frame" />
+      <joint name="${name}_camera_joint" type="fixed">
+        <parent link="${name}_camera_center"/>
+        <child link="${name}_camera_frame"/>
+        <origin xyz="${optical_offset_x} 0 0" rpy="0 0 0" />
+      </joint>
+
+      <link name="${name}_camera_frame_optical"/>
+      <joint name="${name}_camera_optical_joint" type="fixed">
+        <origin xyz="0 0 0" rpy="-${M_PI/2} 0.0 -${M_PI/2}"/>
+        <parent link="${name}_camera_frame"/>
+        <child link="${name}_camera_frame_optical"/>
+      </joint>
+    </xacro:if>
+
+    <xacro:if value="${enable_gnss}">
+      <link name="${name}_gnss_link" />
+      <joint name="${name}_gnss_joint" type="fixed">
+        <parent link="${name}_camera_link"/>
+        <child link="${name}_gnss_link"/>
+        <origin xyz="${gnss_xyz}" rpy="${gnss_rpy}" />
+      </joint>
+    </xacro:if>
 
   </xacro:macro>
 </robot>

@@ -61,8 +61,8 @@ def generate_launch_description():
             'Mem/IncrementalMemory': 'true',
         }],
         remappings=[
-            ('rgb/image', '/zed/zed_node/rgb/image_rect_color'),
-            ('rgb/camera_info', '/zed/zed_node/rgb/camera_info'),
+            ('rgb/image', '/zed/zed_node/rgb/color/rect/image'),
+            ('rgb/camera_info', '/zed/zed_node/rgb/color/rect/image/camera_info'),
             ('depth/image', '/zed/zed_node/depth/depth_registered'),
             ('odom', LaunchConfiguration('odom_topic')),
         ],

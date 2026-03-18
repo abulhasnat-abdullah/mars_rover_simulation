@@ -118,6 +118,34 @@
     </sensor>
   </gazebo>
 
+  <!-- GPS / NavSat Sensor -->
+  <gazebo reference="gps_link">
+    <sensor name="navsat" type="navsat">
+      <always_on>true</always_on>
+      <update_rate>1</update_rate>
+      <topic>/gps/fix</topic>
+      <gz_frame_id>gps_link</gz_frame_id>
+      <ignition_frame_id>gps_link</ignition_frame_id>
+      <navsat>
+        <position_sensing>
+          <horizontal>
+            <!-- Units are degrees, not meters (sdformat navsat noise is angular) -->
+            <noise type="gaussian">
+              <mean>0.0</mean>
+              <stddev>0.0</stddev>
+            </noise>
+          </horizontal>
+          <vertical>
+            <noise type="gaussian">
+              <mean>0.0</mean>
+              <stddev>0.0</stddev>
+            </noise>
+          </vertical>
+        </position_sensing>
+      </navsat>
+    </sensor>
+  </gazebo>
+
   <!-- ========================================= -->
   <!-- ZED CAMERA SENSORS FOR GAZEBO SIMULATION -->
   <!-- ========================================= -->
@@ -148,7 +176,7 @@
       </camera>
       <gz_frame_id>zed_camera_center</gz_frame_id>
       <ignition_frame_id>zed_camera_center</ignition_frame_id>
-      <topic>zed/zed_node/rgb/image_rect_color</topic>
+      <topic>zed/zed_node/rgb/color/rect/image</topic>
     </sensor>
  </gazebo>
   <!-- Depth Camera Sensor with PointCloud2 -->

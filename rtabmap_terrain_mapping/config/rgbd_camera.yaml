@@ -6,13 +6,13 @@ rgbd_camera:
     use_sim_time: true
     
     # ZED RGB-D topics
-    rgb_topic: /zed/zed_node/rgb/image_rect_color
+    rgb_topic: /zed/zed_node/rgb/color/rect/image
     depth_topic: /zed/zed_node/depth/depth_registered
-    camera_info_topic: /zed/zed_node/rgb/camera_info
+    camera_info_topic: /zed/zed_node/rgb/color/rect/image/camera_info
     depth_camera_info_topic: /zed/zed_node/depth/camera_info
     
     # Point cloud topic (main input for 3D mapping)
-    cloud_topic: /zed/zed_node/depth/depth_registered/points
+    cloud_topic: /zed/zed_node/point_cloud/cloud_registered
     
     # TF frames
     camera_frame: zed_camera_center

@@ -50,6 +50,70 @@ sudo apt install -y \
 
 ---
 
+## Docker (ROS 2 Jazzy)
+
+The workspace includes a full Docker setup at the repository root:
+
+- `Dockerfile` - ROS 2 Jazzy image with rosdep + colcon tooling
+- `docker-compose.yml` - dev runtime (host networking, RViz/Gazebo GUI support)
+- `docker/entrypoint.sh` - auto-sources ROS and workspace overlays
+
+### Build and Run
+
+From `~/rover_ws`:
+
+```bash
+# Allow local X11 GUI apps from Docker (RViz/Gazebo)
+xhost +local:docker
+
+# Build image and start shell in container
+docker compose run --rm rover_jazzy
+```
+
+Inside the container:
+
+```bash
+# Build if needed (workspace is mounted from host)
+colcon build --symlink-install
+source install/setup.bash
+```
+
+### Rebuild Image
+
+```bash
+docker compose build --no-cache
+```
+
+### Auto Push After Host Code Changes
+
+When you change code on your host PC and want that update published to Docker Hub:
+
+```bash
+# one-time setup
+cp .env.example .env
+
+# edit .env and set your image name, for example:
+# DOCKER_IMAGE=your_dockerhub_username/rover_ws:jazzy
+
+# login once
+docker login
+
+# rebuild from current host code and push
+./docker/push_to_dockerhub.sh
+```
+
+The script builds with `docker compose build`, pushes the configured tag, and optionally pushes `latest` if `PUSH_LATEST=1`.
+
+### Notes
+
+- The image runs `rosdep install --from-paths src --ignore-src` during build.
+- Default skipped rosdep keys:
+    - `ament_python` (non-system rosdep key in this workspace)
+- To change skipped keys, edit `ROSDEP_SKIP_KEYS` in `docker-compose.yml`.
+- Local `build/`, `install/`, and `log/` folders are excluded from image context via `.dockerignore`.
+
+---
+
 ## Build Instructions
 
 ```bash
@@ -192,7 +256,6 @@ ros2 launch rtabmap_terrain_mapping rtabmap_combined_mapping.launch.py
 | `nav2_gps_waypoint_follower` | GPS waypoint navigation with dual EKF |
 | `explore` | Frontier-based autonomous exploration |
 | `pointcloud_to_laserscan` | Convert depth camera to 2D laser scan |
-| `rover_firmware` | Hardware interface for real robot |
 | `rover_utils` | Utility scripts and tools |
 
 ---
@@ -251,7 +314,7 @@ ros2 topic echo /gps/fix
 
 Check that point cloud topics are publishing:
 ```bash
-ros2 topic hz /zed/zed_node/depth/depth_registered/points
+ros2 topic hz /zed/zed_node/point_cloud/cloud_registered
 ros2 topic hz /rtabmap/cloud_map
 ```
 
@@ -263,10 +326,10 @@ ros2 topic hz /rtabmap/cloud_map
 
 | Topic | Type | Description |
 |-------|------|-------------|
-| `/zed/zed_node/rgb/image_rect_color` | Image | ZED RGB camera image |
+| `/zed/zed_node/rgb/color/rect/image` | Image | ZED RGB camera image |
 | `/zed/zed_node/depth/depth_registered` | Image | ZED depth image |
-| `/zed/zed_node/depth/depth_registered/points` | PointCloud2 | ZED point cloud |
-| `/zed/zed_node/rgb/camera_info` | CameraInfo | Camera intrinsics |
+| `/zed/zed_node/point_cloud/cloud_registered` | PointCloud2 | ZED point cloud |
+| `/zed/zed_node/rgb/color/rect/image/camera_info` | CameraInfo | Camera intrinsics |
 | `/scan` | LaserScan | 2D LiDAR scan |
 | `/imu/data` | Imu | IMU sensor data |
 | `/gps/fix` | NavSatFix | GPS coordinates |

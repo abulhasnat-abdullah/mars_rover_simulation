@@ -12,7 +12,7 @@ find_package(ament_cmake REQUIRED)
 # find_package(<dependency> REQUIRED)
 
 install(
-  DIRECTORY meshes config launch textures rviz models worlds
+  DIRECTORY meshes config launch rviz models worlds
   DESTINATION share/${PROJECT_NAME}
 )
 

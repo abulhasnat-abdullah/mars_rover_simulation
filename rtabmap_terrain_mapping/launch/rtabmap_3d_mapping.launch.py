@@ -66,11 +66,11 @@ def generate_launch_description():
         ],
         remappings=[
             # ZED camera topics
-            ('rgb/image', '/zed/zed_node/rgb/image_rect_color'),
-            ('rgb/camera_info', '/zed/zed_node/rgb/camera_info'),
+            ('rgb/image', '/zed/zed_node/rgb/color/rect/image'),
+            ('rgb/camera_info', '/zed/zed_node/rgb/color/rect/image/camera_info'),
             ('depth/image', '/zed/zed_node/depth/depth_registered'),
             # Point cloud instead of laser scan
-            ('scan_cloud', '/zed/zed_node/depth/depth_registered/points'),
+            ('scan_cloud', '/zed/zed_node/point_cloud/cloud_registered'),
             # Odometry from your EKF
             ('odom', LaunchConfiguration('odom_topic')),
         ],
@@ -102,10 +102,10 @@ def generate_launch_description():
             }
         ],
         remappings=[
-            ('rgb/image', '/zed/zed_node/rgb/image_rect_color'),
-            ('rgb/camera_info', '/zed/zed_node/rgb/camera_info'),
+            ('rgb/image', '/zed/zed_node/rgb/color/rect/image'),
+            ('rgb/camera_info', '/zed/zed_node/rgb/color/rect/image/camera_info'),
             ('depth/image', '/zed/zed_node/depth/depth_registered'),
-            ('scan_cloud', '/zed/zed_node/depth/depth_registered/points'),
+            ('scan_cloud', '/zed/zed_node/point_cloud/cloud_registered'),
             ('odom', LaunchConfiguration('odom_topic')),
         ],
         condition=IfCondition(LaunchConfiguration('localization'))

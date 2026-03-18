@@ -29,7 +29,8 @@ setup(
         'console_scripts': [
             'logged_waypoint_follower = nav2_gps_waypoint_follower.logged_waypoint_follower:main',
             'interactive_waypoint_follower = nav2_gps_waypoint_follower.interactive_waypoint_follower:main',
-            'gps_waypoint_logger = nav2_gps_waypoint_follower.gps_waypoint_logger:main'
+            'gps_waypoint_logger = nav2_gps_waypoint_follower.gps_waypoint_logger:main',
+            'local_xy_waypoint_follower = nav2_gps_waypoint_follower.local_xy_waypoint_follower:main'
         ],
     },
 )

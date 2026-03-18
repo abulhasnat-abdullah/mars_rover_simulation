@@ -203,7 +203,7 @@ def generate_launch_description():
         executable="parameter_bridge",
         name="image_bridge",
         arguments=[
-            "/zed/zed_node/rgb/image_rect_color@sensor_msgs/msg/Image[gz.msgs.Image"
+            "/zed/zed_node/rgb/color/rect/image@sensor_msgs/msg/Image[gz.msgs.Image"
         ],
         parameters=[{"use_sim_time": LaunchConfiguration('use_sim_time')}],
         output="screen",
@@ -227,7 +227,7 @@ def generate_launch_description():
         executable="parameter_bridge",
         name="camera_info_bridge",
         arguments=[
-            "/zed/zed_node/rgb/camera_info@sensor_msgs/msg/CameraInfo[gz.msgs.CameraInfo"
+            "/zed/zed_node/rgb/color/rect/image/camera_info@sensor_msgs/msg/CameraInfo[gz.msgs.CameraInfo"
         ],
         parameters=[{"use_sim_time": LaunchConfiguration('use_sim_time')}],
         output="screen",
@@ -251,7 +251,7 @@ def generate_launch_description():
         executable="parameter_bridge",
         name="point_cloud_bridge",
         arguments=[
-            "/zed/zed_node/depth/depth_registered/points@sensor_msgs/msg/PointCloud2[gz.msgs.PointCloudPacked"
+            "/zed/zed_node/point_cloud/cloud_registered@sensor_msgs/msg/PointCloud2[gz.msgs.PointCloudPacked"
         ],
         parameters=[{"use_sim_time": LaunchConfiguration('use_sim_time')}],
         output="screen",

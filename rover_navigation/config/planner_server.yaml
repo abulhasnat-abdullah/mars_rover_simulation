@@ -13,6 +13,7 @@ planner_server:
     #   plugin: "rover_planning::AStarPlanner"
 
     # Smac 2D parameters
+    
     GridBased:
       plugin: "nav2_smac_planner::SmacPlanner2D" # In Iron and older versions, "/" was used instead of "::"
       tolerance: 0.125                      # tolerance for planning if unable to reach exact pose, in meters

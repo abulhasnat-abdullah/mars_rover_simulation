@@ -2,7 +2,7 @@ import os
 from ament_index_python.packages import get_package_share_directory
 from launch import LaunchDescription
 from launch.actions import DeclareLaunchArgument
-from launch.substitutions import LaunchConfiguration
+from launch.substitutions import LaunchConfiguration, PathJoinSubstitution
 from launch_ros.actions import Node
 
 def generate_launch_description():
@@ -12,11 +12,25 @@ def generate_launch_description():
         description="Use simulated time"
     )
     
+    # Add new launch argument for gamepad
+    gamepad_arg = DeclareLaunchArgument(
+        name="gamepad",
+        default_value="fn",
+        description="Gamepad brand to use. Supported: 'eZ' for easysmx, 'fn' for fantech"
+    )
+    
+    # Use PathJoinSubstitution to dynamically load the right config file based on gamepad arg
+    joy_teleop_param_file = PathJoinSubstitution([
+        get_package_share_directory("rover_controller"), 
+        "config", 
+        ["joy_teleop_", LaunchConfiguration("gamepad"), ".yaml"]
+    ])
+    
     joy_teleop = Node(
         package="joy_teleop",
         executable="joy_teleop",
         parameters=[
-            os.path.join(get_package_share_directory("rover_controller"), "config", "joy_teleop.yaml"),
+            joy_teleop_param_file,
             {"use_sim_time": LaunchConfiguration("use_sim_time")}
         ],
     )
@@ -64,6 +78,7 @@ def generate_launch_description():
 
     return LaunchDescription([
         use_sim_time_arg,
+        gamepad_arg,
         joy_teleop,
         joy_node,
         twist_mux,

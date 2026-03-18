@@ -53,7 +53,7 @@ class TerrainProcessor(Node):
         # Subscribers - ZED camera point cloud
         self.pointcloud_sub = self.create_subscription(
             PointCloud2,
-            '/zed/zed_node/depth/depth_registered/points',
+            '/zed/zed_node/point_cloud/cloud_registered',
             self.pointcloud_callback,
             rclpy.qos.qos_profile_sensor_data
         )
@@ -71,22 +71,26 @@ class TerrainProcessor(Node):
             OccupancyGrid,
             '/rtabmap/map',
             self.rtabmap_grid_callback,
+            10,
         )
         
         # Publishers
         self.terrain_grid_pub = self.create_publisher(
             OccupancyGrid,
             '/terrain_map',
+            10,
         )
         
         self.traversability_pub = self.create_publisher(
             OccupancyGrid,
             '/terrain/traversability',
+            10,
         )
         
         self.slope_map_pub = self.create_publisher(
             OccupancyGrid,
             '/terrain/slope_map',
+            10,
         )
         
         self.filtered_cloud_pub = self.create_publisher(

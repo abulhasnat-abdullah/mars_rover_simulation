@@ -11,6 +11,7 @@
     <!-- Core gz-sim plugins -->
     <plugin filename="gz-sim-contact-system"         name="gz::sim::systems::Contact"/>
     <plugin filename="gz-sim-imu-system"             name="gz::sim::systems::Imu"/>
+    <plugin filename="gz-sim-navsat-system"          name="gz::sim::systems::NavSat"/>
     <plugin filename="gz-sim-physics-system"         name="gz::sim::systems::Physics"/>
     <plugin filename="gz-sim-scene-broadcaster-system" name="gz::sim::systems::SceneBroadcaster"/>
     <plugin filename="gz-sim-user-commands-system"   name="gz::sim::systems::UserCommands"/>
@@ -49,63 +50,64 @@
 
     <!-- 3) All your ArUco poles -->
     <include>
-      <uri>model://aruco_pole_textures/aruco_pole_31</uri>
+      <uri>model://aruco_pole_textures/aruco_pole_51</uri>
       <pose>0.75 -2.82 -0.07 0 0 1.852</pose>
     </include>
     <include>
-      <uri>model://aruco_pole_textures/aruco_pole_30</uri>
+      <uri>model://aruco_pole_textures/aruco_pole_52</uri>
       <pose>8.25 -2.52 -0.10 0 0 4.317</pose>
     </include>
     <include>
-      <uri>model://aruco_pole_textures/aruco_pole_29</uri>
+      <uri>model://aruco_pole_textures/aruco_pole_53</uri>
       <pose>12.8 1.94 0.20 0 0 0.994</pose>
     </include>
     <include>
-      <uri>model://aruco_pole_textures/aruco_pole_28</uri>
+      <uri>model://aruco_pole_textures/aruco_pole_54</uri>
       <pose>13.72 7.90 0.26 0 0 5.768</pose>
     </include>
     <include>
-      <uri>model://aruco_pole_textures/aruco_pole_27</uri>
+      <uri>model://aruco_pole_textures/aruco_pole_55</uri>
       <pose>11.56 12.7 0.23 0 0 2.501</pose>
     </include>
     <include>
-      <uri>model://aruco_pole_textures/aruco_pole_26</uri>
+      <uri>model://aruco_pole_textures/aruco_pole_56</uri>
       <pose>11.71 17.21 0.16 0 0 3.141</pose>
     </include>
     <include>
-      <uri>model://aruco_pole_textures/aruco_pole_25</uri>
+      <uri>model://aruco_pole_textures/aruco_pole_57</uri>
       <pose>12.13 22.85 0.50 0 0 6.012</pose>
     </include>
     <include>
-      <uri>model://aruco_pole_textures/aruco_pole_24</uri>
+      <uri>model://aruco_pole_textures/aruco_pole_58</uri>
       <pose>11.07 32.05 0.09 0 0 0.123</pose>
     </include>
     <include>
-      <uri>model://aruco_pole_textures/aruco_pole_23</uri>
+      <uri>model://aruco_pole_textures/aruco_pole_59</uri>
       <pose>8.30 26.74 0.09 0 0 4.889</pose>
     </include>
     <include>
-      <uri>model://aruco_pole_textures/aruco_pole_22</uri>
+      <uri>model://aruco_pole_textures/aruco_pole_60</uri>
       <pose>-0.5 26.0 0.0 0 0 2.007</pose>
     </include>
     <include>
-      <uri>model://aruco_pole_textures/aruco_pole_21</uri>
+      <uri>model://aruco_pole_textures/aruco_pole_61</uri>
       <pose>-6.2 26.0 -0.22 0 0 5.115</pose>
     </include>
     <include>
-      <uri>model://aruco_pole_textures/aruco_pole_20</uri>
+      <uri>model://aruco_pole_textures/aruco_pole_62</uri>
       <pose>-4.91 18.41 0.20 0 0 1.166</pose>
     </include>
     <include>
-      <uri>model://aruco_pole_textures/aruco_pole_19</uri>
+      <uri>model://aruco_pole_textures/aruco_pole_63</uri>
       <pose>-4.07 12.0 0.35 0 0 3.927</pose>
     </include>
     <include>
-      <uri>model://aruco_pole_textures/aruco_pole_18</uri>
+      <uri>model://aruco_pole_textures/aruco_pole_64</uri>
       <pose>-6.13 3.60 0.09 0 0 0.750</pose>
     </include>
     <include>
-      <uri>model://aruco_pole_textures/aruco_pole_17</uri>
+      <uri>model://aruco_pole_textures/aruco_pole_51</uri>
+      <name>aruco_pole_51_duplicate</name>
       <pose>-5.77 -0.55 0.0 0 0 4.500</pose>
     </include>
 

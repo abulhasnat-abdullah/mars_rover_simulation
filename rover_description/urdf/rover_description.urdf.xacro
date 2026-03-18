@@ -110,11 +110,10 @@
   <xacro:wheel_link name="FR" x_offset="0.35401" y_offset="-1"/>
   <xacro:wheel_link name="FL" x_offset="0.35401" y_offset="1"/>
 
-  <!-- Depth Camera (simulated stereo camera) -->
-  <xacro:depth_camera
+    <!-- ZED Camera (simulated stereo camera) -->
+    <xacro:zed_camera
       name="$(arg camera_name)"
-      baseline="0.12"
-      height="0.03"/>
+      model="zed2"/>
 
   <joint name="zed_camera_mount" type="fixed">
     <parent link="base_link"/>
@@ -184,33 +183,23 @@
     <axis xyz="0 0 0" />
   </joint>
 
-  <!-- GPS Link -->
-<link name="gps_link">        
-        <sensor name="navsat" type="navsat">
-          <always_on>true</always_on>
-          <update_rate>1</update_rate>
-          <topic>gps/fix</topic>
-          <gz_frame_id>gps_link</gz_frame_id>   
-          <navsat>
-            <position_sensing>
-              <horizontal>
-              <!-- Be carefull setting this.
-              Units in degree not in meters https://github.com/gazebosim/sdformat/issues/1572 -->
-                <noise type="gaussian">
-                  <mean>0.0</mean>
-                  <stddev>0.0</stddev>
-                </noise>
-              </horizontal>
-              <vertical>
-                <noise type="gaussian">
-                  <mean>0.0</mean>
-                  <stddev>0.0</stddev>
-                </noise>
-              </vertical>
-            </position_sensing>
-          </navsat>
-        </sensor>          
-      </link>
+  <!-- GPS Link (sensor is defined in rover_gazebo.xacro via <gazebo> extension) -->
+  <link name="gps_link">
+    <inertial>
+      <origin xyz="0 0 0" rpy="0 0 0" />
+      <mass value="0.05" />
+      <inertia ixx="1e-6" ixy="0" ixz="0" iyy="1e-6" iyz="0" izz="1e-6" />
+    </inertial>
+    <visual>
+      <origin xyz="0 0 0" rpy="0 0 0" />
+      <geometry>
+        <box size="0.05 0.05 0.05" />
+      </geometry>
+      <material name="sensor_grey">
+        <color rgba="0.3 0.3 0.3 1.0" />
+      </material>
+    </visual>
+  </link>
 
 
 <joint name="gps_joint" type="fixed">

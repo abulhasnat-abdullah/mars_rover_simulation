@@ -1,6 +1,7 @@
 import os
 from launch import LaunchDescription
 from launch.actions import IncludeLaunchDescription, DeclareLaunchArgument
+from launch.conditions import IfCondition
 from launch.launch_description_sources import PythonLaunchDescriptionSource
 from launch.substitutions import LaunchConfiguration, PathJoinSubstitution
 from launch_ros.actions import Node
@@ -9,6 +10,21 @@ from ament_index_python.packages import get_package_share_directory
 
 
 def generate_launch_description():
+    use_sim_time = LaunchConfiguration('use_sim_time')
+    use_rviz = LaunchConfiguration('use_rviz')
+
+    declare_use_sim_time_cmd = DeclareLaunchArgument(
+        'use_sim_time',
+        default_value='true',
+        description='Use simulation time'
+    )
+
+    declare_use_rviz_cmd = DeclareLaunchArgument(
+        'use_rviz',
+        default_value='true',
+        description='Whether to start RViz2'
+    )
+
     # Get package directories
     nav2_bringup_dir = get_package_share_directory('nav2_bringup')
     nav2_gps_waypoint_follower_dir = get_package_share_directory('nav2_gps_waypoint_follower')
@@ -26,9 +42,6 @@ def generate_launch_description():
         'rviz',
         'gps_nav.rviz'
     ])
-
-    # Launch configuration
-    use_sim_time = LaunchConfiguration('use_sim_time', default='True')
 
     # Include nav2 navigation launch
     nav2_navigation = IncludeLaunchDescription(
@@ -48,10 +61,13 @@ def generate_launch_description():
         name='rviz2',
         arguments=['-d', rviz_config_file],
         parameters=[{'use_sim_time': use_sim_time}],
-        output='screen'
+        output='screen',
+        condition=IfCondition(use_rviz)
     )
 
     return LaunchDescription([
+        declare_use_sim_time_cmd,
+        declare_use_rviz_cmd,
         nav2_navigation,
         rviz2_node,
     ])
