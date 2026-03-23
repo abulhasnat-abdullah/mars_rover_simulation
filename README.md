@@ -3,7 +3,7 @@ A comprehensive ROS2 Jazzy workspace for simulating and controlling a 4-wheel di
 
 ## Features
 
-- **Gazebo Simulation** with multiple world environments (Mars terrain, Sonoma raceway)
+- **Gazebo Simulation** with multiple world environments (Mars terrain, Sonoma raceway, arc_terrain)
 - **SLAM Mapping** using SLAM Toolbox (2D LiDAR-based)
 - **SLAM + Nav2 (No GPS)** navigation via `rover_nav2_slam_bringup`
 - **RTAB-Map** for RGB-D based 2D/3D terrain mapping
@@ -147,6 +147,9 @@ echo "source ~/rover_ws/install/setup.bash" >> ~/.bashrc
 Launch the rover in Gazebo with joystick teleoperation:
 
 ```bash
+# Arc Terrain world (challenging terrain)
+ros2 launch rover_bringup simulated_robot.launch.py world_name:=arc_terrain world_extension:=.sdf
+
 # Mars Yard world (rocky terrain)
 ros2 launch rover_bringup simulated_robot.launch.py world_name:=mars_yard world_extension:=.sdf
 
@@ -163,6 +166,7 @@ ros2 launch rover_bringup simulated_robot.launch.py
 |------------|-----------|-------------|
 | `mars_yard` | `.sdf` | Rocky Mars-like terrain for terrain mapping |
 | `sonoma` | `.sdf` | Sonoma raceway - flat terrain for navigation |
+| `arc_terrain` | `.sdf` | Arc-shaped challenging terrain for advanced navigation |
 | `empty` | `.world` | Empty world (default) |
 
 ---

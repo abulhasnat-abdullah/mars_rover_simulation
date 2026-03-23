@@ -93,7 +93,7 @@ local_costmap:
       width: 10             # INCREASED from 3m to 10m for better obstacle detection
       height: 10            # INCREASED from 3m to 10m
       resolution: 0.05
-      robot_radius: 0.6     # CHANGED 
+      robot_radius: 0.77     # CHANGED 
       plugins: ["voxel_layer", "inflation_layer"]
       inflation_layer:
         plugin: "nav2_costmap_2d::InflationLayer"

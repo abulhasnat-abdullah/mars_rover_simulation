@@ -105,11 +105,6 @@
       <uri>model://aruco_pole_textures/aruco_pole_64</uri>
       <pose>-6.13 3.60 0.09 0 0 0.750</pose>
     </include>
-    <include>
-      <uri>model://aruco_pole_textures/aruco_pole_51</uri>
-      <name>aruco_pole_51_duplicate</name>
-      <pose>-5.77 -0.55 0.0 0 0 4.500</pose>
-    </include>
 
     <!-- 4) Some landmarks -->
     <include>

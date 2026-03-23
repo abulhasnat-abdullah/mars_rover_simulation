@@ -1,0 +1,69 @@
+material UrbanTile/Light_Diffuse
+{
+  technique
+  {
+    pass
+    {
+      texture_unit
+      {
+        texture Light_Albedo.jpg
+      }
+    }
+  }
+}
+
+material UrbanTile/Rail_Diffuse
+{
+  technique
+  {
+    pass
+    {
+      texture_unit
+      {
+        texture Rail_Albedo.jpg
+      }
+    }
+  }
+}
+
+material UrbanTile/ThirdRail_Diffuse
+{
+  technique
+  {
+    pass
+    {
+      texture_unit
+      {
+        texture ThirdRail_Albedo.jpg
+      }
+    }
+  }
+}
+
+material UrbanTile/Shaft_Diffuse
+{
+  technique
+  {
+    pass
+    {
+      texture_unit
+      {
+        texture Shaft_Albedo.jpg
+      }
+    }
+  }
+}
+
+material UrbanTile/Chainlink_Diffuse
+{
+  technique
+  {
+    pass
+    {
+      texture_unit
+      {
+        texture Chainlink_Albedo.jpg
+      }
+    }
+  }
+}

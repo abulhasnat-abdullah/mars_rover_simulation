@@ -47,7 +47,7 @@ rover_controller:
     # Command timeout
     # Gazebo + twist_mux can introduce >250ms stamp jitter; keep this larger to
     # avoid dropping valid commands as "too old".
-    cmd_vel_timeout: 1.0
+    cmd_vel_timeout: 2.0
     
     # Covariance matrices (updated for larger rover)
     pose_covariance_diagonal: [0.001, 0.001, 1.0e-3, 1.0e-3, 1.0e-3, 0.01]

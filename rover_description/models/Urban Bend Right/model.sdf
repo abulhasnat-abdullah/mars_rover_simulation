@@ -1,0 +1,141 @@
+<?xml version="1.0"?>
+<sdf version="1.6">
+  <model name="urban_bend_right">
+    <static>true</static>
+    <link name="base">
+      <collision name="collision">
+        <geometry>
+          <mesh>
+            <uri>meshes/bend_right.dae</uri>
+            <scale>1.0005 1.0005 1.0005</scale>
+          </mesh>
+        </geometry>
+      </collision>
+
+      <visual name="visual_shaft">
+        <geometry>
+          <mesh>
+            <uri>meshes/bend_right.dae</uri>
+            <submesh>
+              <name>Shaft</name>
+              <center>false</center>
+            </submesh>
+            <scale>1.0005 1.0005 1.0005</scale>
+          </mesh>
+        </geometry>
+        <material>
+          <diffuse>1.0 1.0 1.0</diffuse>
+          <specular>1.0 1.0 1.0</specular>
+          <pbr>
+            <metal>
+              <albedo_map>https://fuel.ignitionrobotics.org/1.0/OpenRobotics/models/Urban Platform/tip/files/materials/textures/Shaft_Albedo.jpg</albedo_map>
+              <normal_map>https://fuel.ignitionrobotics.org/1.0/OpenRobotics/models/Urban Platform/tip/files/materials/textures/Shaft_Normal.jpg</normal_map>
+              <roughness_map>https://fuel.ignitionrobotics.org/1.0/OpenRobotics/models/Urban Platform/tip/files/materials/textures/Shaft_Roughness.jpg</roughness_map>
+              <metalness_map>https://fuel.ignitionrobotics.org/1.0/OpenRobotics/models/Urban Platform/tip/files/materials/textures/Shaft_Metalness.jpg</metalness_map>
+            </metal>
+          </pbr>
+          <!-- fallback to script if no PBR support-->
+          <script>
+              <uri>materials/scripts</uri>
+              <uri>materials/textures</uri>
+              <name>UrbanTile/Shaft_Diffuse</name>
+          </script>
+        </material>
+      </visual>
+
+      <visual name="visual_rail">
+        <geometry>
+          <mesh>
+            <uri>meshes/bend_right.dae</uri>
+            <submesh>
+              <name>Rail</name>
+              <center>false</center>
+            </submesh>
+            <scale>1.0005 1.0005 1.0005</scale>
+          </mesh>
+        </geometry>
+        <material>
+          <diffuse>1.0 1.0 1.0</diffuse>
+          <specular>1.0 1.0 1.0</specular>
+          <pbr>
+            <metal>
+              <albedo_map>https://fuel.ignitionrobotics.org/1.0/OpenRobotics/models/Urban Platform/tip/files/materials/textures/Rail_Albedo.jpg</albedo_map>
+              <normal_map>https://fuel.ignitionrobotics.org/1.0/OpenRobotics/models/Urban Platform/tip/files/materials/textures/Rail_Normal.jpg</normal_map>
+              <roughness_map>https://fuel.ignitionrobotics.org/1.0/OpenRobotics/models/Urban Platform/tip/files/materials/textures/Rail_Roughness.jpg</roughness_map>
+              <metalness_map>https://fuel.ignitionrobotics.org/1.0/OpenRobotics/models/Urban Platform/tip/files/materials/textures/Rail_Metalness.jpg</metalness_map>
+            </metal>
+          </pbr>
+          <!-- fallback to script if no PBR support-->
+          <script>
+              <uri>materials/scripts</uri>
+              <uri>materials/textures</uri>
+              <name>UrbanTile/Rail_Diffuse</name>
+          </script>
+        </material>
+      </visual>
+
+      <visual name="visual_third_rail">
+        <geometry>
+          <mesh>
+            <uri>meshes/bend_right.dae</uri>
+            <submesh>
+              <name>ThirdRail</name>
+              <center>false</center>
+            </submesh>
+            <scale>1.0005 1.0005 1.0005</scale>
+          </mesh>
+        </geometry>
+        <material>
+          <diffuse>1.0 1.0 1.0</diffuse>
+          <specular>1.0 1.0 1.0</specular>
+          <pbr>
+            <metal>
+              <albedo_map>https://fuel.ignitionrobotics.org/1.0/OpenRobotics/models/Urban Platform/tip/files/materials/textures/ThirdRail_Albedo.jpg</albedo_map>
+              <normal_map>https://fuel.ignitionrobotics.org/1.0/OpenRobotics/models/Urban Platform/tip/files/materials/textures/ThirdRail_Normal.jpg</normal_map>
+              <roughness_map>https://fuel.ignitionrobotics.org/1.0/OpenRobotics/models/Urban Platform/tip/files/materials/textures/ThirdRail_Roughness.jpg</roughness_map>
+              <metalness_map>https://fuel.ignitionrobotics.org/1.0/OpenRobotics/models/Urban Platform/tip/files/materials/textures/ThirdRail_Metalness.jpg</metalness_map>
+            </metal>
+          </pbr>
+          <!-- fallback to script if no PBR support-->
+          <script>
+              <uri>materials/scripts</uri>
+              <uri>materials/textures</uri>
+              <name>UrbanTile/ThirdRail_Diffuse</name>
+          </script>
+        </material>
+      </visual>
+
+      <visual name="visual_light">
+        <geometry>
+          <mesh>
+            <uri>meshes/bend_right.dae</uri>
+            <submesh>
+              <name>Light</name>
+              <center>false</center>
+            </submesh>
+            <scale>1.0005 1.0005 1.0005</scale>
+          </mesh>
+        </geometry>
+        <material>
+          <diffuse>1.0 1.0 1.0</diffuse>
+          <specular>1.0 1.0 1.0</specular>
+          <pbr>
+            <metal>
+              <albedo_map>https://fuel.ignitionrobotics.org/1.0/OpenRobotics/models/Urban Platform/tip/files/materials/textures/Light_Albedo.jpg</albedo_map>
+              <normal_map>https://fuel.ignitionrobotics.org/1.0/OpenRobotics/models/Urban Platform/tip/files/materials/textures/Light_Normal.jpg</normal_map>
+              <roughness_map>https://fuel.ignitionrobotics.org/1.0/OpenRobotics/models/Urban Platform/tip/files/materials/textures/Light_Roughness.jpg</roughness_map>
+              <metalness_map>https://fuel.ignitionrobotics.org/1.0/OpenRobotics/models/Urban Platform/tip/files/materials/textures/Light_Metalness.jpg</metalness_map>
+            </metal>
+          </pbr>
+          <!-- fallback to script if no PBR support-->
+          <script>
+              <uri>materials/scripts</uri>
+              <uri>materials/textures</uri>
+              <name>UrbanTile/Light_Diffuse</name>
+          </script>
+        </material>
+      </visual>
+
+    </link>
+  </model>
+</sdf>
